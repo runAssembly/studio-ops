@@ -191,6 +191,114 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
   width:110px}
 .bar span{display:block;height:100%;background:var(--lime)}
 
+/* ---------------------------------------------------------------- preview
+   Platform chrome. These deliberately do NOT use the Linear tokens — the point
+   is to look like TikTok / Instagram / Pinterest, so a post can be judged as it
+   will actually appear. The Linear panel is the frame around them. */
+.pv{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:start}
+.pv-stage{display:flex;flex-direction:column;align-items:center;gap:12px}
+.pv-tabs{display:flex;gap:6px}
+.pv-tab{font-size:12.5px;color:var(--muted);background:rgba(255,255,255,.05);
+  border-radius:var(--r-pill);padding:5px 13px;transition:.12s}
+.pv-tab:hover{color:var(--body)}
+.pv-tab.on{background:var(--body);color:var(--void);font-weight:510}
+.pv-nav{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--muted)}
+.pv-nav button{width:26px;height:26px;border-radius:var(--r-pill);
+  background:rgba(255,255,255,.06);color:var(--body);display:grid;place-items:center;font-size:13px}
+.pv-nav button:hover{background:rgba(255,255,255,.13)}
+.pv-nav .cnt{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.pv-meta h4{font-size:15px;color:var(--white);font-weight:510;margin-bottom:2px}
+.pv-kv{display:grid;grid-template-columns:auto 1fr;gap:7px 16px;font-size:13px;margin:14px 0 18px}
+.pv-kv dt{color:var(--dim)}
+.pv-kv dd{color:var(--body)}
+.pv-cap{background:rgba(255,255,255,.02);border-radius:var(--r-btn);padding:12px 14px;
+  font-size:13px;color:var(--body);line-height:1.55}
+.pv-line{display:flex;gap:9px;align-items:baseline;font-size:13px;padding:5px 0;
+  border-bottom:1px solid rgba(35,37,42,.6);cursor:pointer}
+.pv-line:last-child{border-bottom:none}
+.pv-line i{font-family:var(--mono);color:var(--dim);font-style:normal;flex:none}
+.pv-line.now{color:var(--white)}
+.pv-line.now i{color:var(--lime)}
+
+/* the device shell — one shell, three skins */
+.dev{width:320px;flex:none;border-radius:26px;overflow:hidden;background:#000;
+  box-shadow:0 0 0 8px #17181a,0 0 0 9px #2a2c30,0 22px 50px -20px rgba(0,0,0,.9);position:relative}
+.dev.pinboard{border-radius:0;box-shadow:none;background:transparent;overflow:visible}
+
+/* ---- TikTok ---- */
+.tt{position:relative;aspect-ratio:9/16;background:#000}
+.tt>img{width:100%;height:100%;object-fit:cover;display:block}
+.tt .top{position:absolute;top:0;left:0;right:0;padding:14px 0 26px;display:flex;
+  justify-content:center;gap:18px;font-size:13.5px;color:rgba(255,255,255,.6);
+  background:linear-gradient(to bottom,rgba(0,0,0,.45),transparent)}
+.tt .top b{color:#fff;font-weight:600;position:relative}
+.tt .top b::after{content:'';position:absolute;left:50%;transform:translateX(-50%);bottom:-7px;
+  width:20px;height:2px;background:#fff;border-radius:2px}
+.tt .cnt{position:absolute;top:52px;right:12px;background:rgba(0,0,0,.5);color:#fff;
+  font-size:11.5px;border-radius:999px;padding:2px 9px;font-family:var(--mono)}
+.tt .rail{position:absolute;right:9px;bottom:96px;display:flex;flex-direction:column;
+  align-items:center;gap:17px;color:#fff}
+.tt .rail .it{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11.5px;font-weight:600}
+.tt .rail svg{width:29px;height:29px;filter:drop-shadow(0 1px 2px rgba(0,0,0,.5))}
+.tt .av{width:42px;height:42px;border-radius:50%;border:1.5px solid #fff;background:#3a3d42;
+  display:grid;place-items:center;color:#fff;font-size:15px;font-weight:600;position:relative}
+.tt .av .plus{position:absolute;bottom:-7px;width:17px;height:17px;border-radius:50%;
+  background:#fe2c55;color:#fff;font-size:12px;line-height:16px;text-align:center}
+.tt .foot{position:absolute;left:0;right:56px;bottom:0;padding:0 12px 16px;color:#fff;
+  background:linear-gradient(to top,rgba(0,0,0,.72),transparent)}
+.tt .hd{font-size:14.5px;font-weight:600;margin-bottom:5px}
+.tt .cp{font-size:13px;line-height:1.35;margin-bottom:8px}
+.tt .mu{display:flex;align-items:center;gap:6px;font-size:12.5px}
+.tt .mu svg{width:13px;height:13px;flex:none}
+.tt .dots{display:flex;gap:4px;margin-bottom:9px}
+.tt .dots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4)}
+.tt .dots i.on{background:#fff}
+
+/* ---- Instagram ---- */
+.ig{background:#000;color:#fff}
+.ig .hd{display:flex;align-items:center;gap:9px;padding:11px 12px}
+.ig .ring{width:31px;height:31px;border-radius:50%;padding:2px;flex:none;
+  background:linear-gradient(45deg,#f9ce34,#ee2a7b,#6228d7)}
+.ig .ring span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;
+  background:#3a3d42;color:#fff;font-size:12px;font-weight:600}
+.ig .hd .nm{font-size:13px;font-weight:600}
+.ig .hd .sub{font-size:11px;color:#a8a8a8}
+.ig .hd .more{margin-left:auto;color:#fff;font-size:17px;letter-spacing:1px}
+.ig .frame{position:relative;aspect-ratio:4/5;background:#000}
+.ig .frame img{width:100%;height:100%;object-fit:cover;display:block}
+.ig .cnt{position:absolute;top:11px;right:11px;background:rgba(0,0,0,.6);color:#fff;
+  font-size:11.5px;border-radius:999px;padding:2px 9px;font-family:var(--mono)}
+.ig .acts{display:flex;align-items:center;gap:14px;padding:10px 12px 4px}
+.ig .acts svg{width:23px;height:23px;stroke:#fff;fill:none;stroke-width:1.8}
+.ig .acts .sp{margin-left:auto}
+.ig .pg{display:flex;justify-content:center;gap:4px;padding:9px 0 2px}
+.ig .pg i{width:5px;height:5px;border-radius:50%;background:#3a3d42}
+.ig .pg i.on{background:#2196f3}
+.ig .body{padding:2px 12px 14px;font-size:13px;line-height:1.4}
+.ig .lk{font-weight:600;margin-bottom:4px}
+.ig .cp b{font-weight:600;margin-right:5px}
+.ig .cm{color:#a8a8a8;margin-top:4px}
+.ig .tm{color:#a8a8a8;font-size:10.5px;margin-top:6px;text-transform:uppercase}
+
+/* ---- Pinterest ---- */
+.pn{width:300px}
+.pn .pin{position:relative;border-radius:16px;overflow:hidden;background:#111}
+.pn .pin img{width:100%;display:block}
+.pn .save{position:absolute;top:12px;right:12px;background:#e60023;color:#fff;font-size:13px;
+  font-weight:600;border-radius:999px;padding:9px 16px}
+.pn .cnt{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.65);color:#fff;
+  font-size:11.5px;border-radius:999px;padding:2px 9px;font-family:var(--mono)}
+.pn .below{padding:11px 3px 0;color:#e9e9e9}
+.pn .ttl{font-size:14px;font-weight:600;line-height:1.3}
+.pn .ds{font-size:12.5px;color:#b5b5b5;margin-top:3px;line-height:1.4}
+.pn .who{display:flex;align-items:center;gap:8px;margin-top:11px}
+.pn .who .av{width:24px;height:24px;border-radius:50%;background:#3a3d42;color:#fff;
+  display:grid;place-items:center;font-size:11px;font-weight:600}
+.pn .who .nm{font-size:12px;color:#b5b5b5}
+.pv-note{font-size:12px;color:var(--dim);margin-top:2px;max-width:330px;text-align:center;line-height:1.45}
+.modal.wide{width:min(920px,100%)}
+@media(max-width:820px){.pv{grid-template-columns:1fr}}
+
 /* ------------------------------------------------------------------ modal */
 #ovl{position:fixed;inset:0;background:rgba(8,9,10,.72);display:none;place-items:center;z-index:60;
   padding:24px}
@@ -332,6 +440,9 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
    ====================================================================== */
 const PLATFORMS={tiktok:{name:'TikTok',color:'#7c72ff'},instagram:{name:'Instagram',color:'#eb5757'},pinterest:{name:'Pinterest',color:'#27a644'}};
 const RATE={lite:0.0336,pro:0.1344};   // per image, measured
+// The real slides built 3 Sep, deployed alongside this page. Relative paths so the app works
+// the same on localhost and on Pages — an absolute /media/ path 404s under a project subpath.
+const MEDIA_CLINIC01=Array.from({length:9},(_,i)=>`media/clinic-01/clinic-01-${String(i+1).padStart(2,'0')}.jpg`);
 const SEED={
   accounts:[
     {id:'a1',platform:'tiktok',handle:'handle TBD',followers:0},
@@ -340,13 +451,15 @@ const SEED={
   ],
   posts:[
     {id:'p1',date:'2026-09-04',account:'a1',hook:'extremely chic content ideas',niche:'aesthetic clinic',
-     status:'scheduled',slides:9,model:'lite',views:0,saves:0,likes:0,comments:0,
+     status:'scheduled',slides:9,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,
      script:['extremely chic content ideas / • aesthetic clinic •','the tray before anyone touches it','hands only, no faces','the walk to the treatment room','love this light','one drop, up close','restocking the shelf','your team laughing, not posing','closing up at 7pm'],
      caption:'content ideas for your clinic that take five minutes to shoot #aestheticclinic #skinclinic #medspa #clinicmarketing #esthetician'},
     {id:'p2',date:'2026-09-04',account:'a2',hook:'extremely chic content ideas',niche:'aesthetic clinic',
-     status:'scheduled',slides:9,model:'lite',views:0,saves:0,likes:0,comments:0,script:[],caption:'Same carousel, cross posted.'},
+     status:'scheduled',slides:9,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,script:[],
+     caption:'Same carousel, cross posted. Instagram crops 9:16 to 4:5 — check the cover line survives.'},
     {id:'p3',date:'2026-09-05',account:'a3',hook:'extremely chic content ideas',niche:'aesthetic clinic',
-     status:'draft',slides:9,model:'lite',views:0,saves:0,likes:0,comments:0,script:[],caption:'Pinterest wants each slide as its own pin. Split before scheduling.'}
+     status:'draft',slides:9,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,script:[],
+     caption:'Pinterest wants each slide as its own pin. Split before scheduling.'}
   ],
   hooks:[
     {id:'h1',text:'extremely chic content ideas',source:'reference @sherbabyyyyy',used:1,views:14891,saves:479},
@@ -363,8 +476,22 @@ const SEED={
 /* ------------------------------------------------------------------ store */
 const KEY='studio.v1';
 let DB=load();
-function load(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
-  return JSON.parse(JSON.stringify(SEED));}
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)return migrate(JSON.parse(r));}catch(e){}
+  return JSON.parse(JSON.stringify(SEED));
+}
+// ⛔ Anyone who opened the earlier build already has a stored copy, and the seed only ever
+// applies on a FIRST load — so shipping `media` in SEED alone would leave every existing
+// browser showing "no slides" forever. Backfill by id instead of bumping the key, which
+// would have silently thrown away their edits.
+function migrate(db){
+  if(!db||!db.posts)return JSON.parse(JSON.stringify(SEED));
+  for(const s of SEED.posts){
+    const p=db.posts.find(x=>x.id===s.id);
+    if(p&&!(p.media&&p.media.length)&&s.media)p.media=s.media.slice();
+  }
+  return db;
+}
 function save(){
   // Persist first, but NEVER let a storage failure stop the re-render — Safari private
   // mode and a full quota both throw here, and an uncaught throw would leave the screen
@@ -401,7 +528,14 @@ function show(id){
 }
 document.addEventListener('keydown',e=>{
   if(e.target.matches('input,textarea,select'))return;
-  if(e.key==='Escape')closeModal();
+  if(e.key==='Escape'){closeModal();return;}
+  // Arrows page the carousel while a preview is open — and ONLY then, or they would
+  // fight the browser's own scrolling everywhere else.
+  if(document.getElementById('modal').dataset.pv==='1'){
+    if(e.key==='ArrowLeft'){pvGo(-1);return;}
+    if(e.key==='ArrowRight'){pvGo(1);return;}
+  }
+  if(document.getElementById('ovl').classList.contains('on'))return;
   const n=parseInt(e.key,10); if(n>=1&&n<=VIEWS.length)show(VIEWS[n-1][0]);
 });
 
@@ -428,14 +562,14 @@ function renderUpcoming(){
   const up=DB.posts.filter(p=>p.status!=='live').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
   document.getElementById('upcoming').innerHTML = up.length? up.map(p=>{
     const a=acct(p.account),pl=PLATFORMS[a.platform];
-    return `<div class="row"><div>
+    return `<div class="row" style="cursor:pointer" onclick="openPreview('${p.id}')"><div>
       <div class="r-t">${esc(p.hook)}</div>
       <div class="r-s">${pl.name} · ${p.niche||''} · ${fmtDate(p.date)}</div></div>
       <div class="r-end">
         <span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span>
         ${statusBadge(p.status)}
         <span class="num dimtxt">${money(cost(p))}</span>
-        <button class="rowbtn" onclick="openPost('${p.id}')">Edit</button>
+        <button class="rowbtn" onclick="event.stopPropagation();openPost('${p.id}')">Edit</button>
       </div></div>`;}).join('') : '<div class="empty">Nothing queued.</div>';
 }
 
@@ -463,7 +597,7 @@ function renderPosts(){
   document.getElementById('postsEmpty').style.display=rows.length?'none':'block';
   document.getElementById('postRows').innerHTML=rows.map(p=>{
     const a=acct(p.account),pl=PLATFORMS[a.platform];
-    return `<tr>
+    return `<tr style="cursor:pointer" onclick="openPreview('${p.id}')">
       <td class="num dimtxt">${p.date}</td>
       <td class="hook">${esc(p.hook)}<div class="dimtxt" style="font-size:12px">${esc(p.niche||'')}</div></td>
       <td><span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span></td>
@@ -473,7 +607,7 @@ function renderPosts(){
       <td class="num">${(p.views||0).toLocaleString()}</td>
       <td class="num">${(p.saves||0).toLocaleString()}</td>
       <td class="num">${rate(p.saves||0,p.views||0)}</td>
-      <td style="text-align:right"><button class="rowbtn" onclick="openPost('${p.id}')">Edit</button></td>
+      <td style="text-align:right"><button class="rowbtn" onclick="event.stopPropagation();openPost('${p.id}')">Edit</button></td>
     </tr>`;}).join('');
 }
 
@@ -510,7 +644,9 @@ function renderScripts(){
       <div style="display:flex;align-items:center;gap:12px">
         <div><div class="r-t" style="color:var(--white);font-size:14px">${esc(p.hook)}</div>
         <div class="r-s">${pl.name} · ${p.script.length} slides · ${fmtDate(p.date)}</div></div>
-        <div class="r-end" style="margin-left:auto"><button class="rowbtn" onclick="openPost('${p.id}')">Edit</button></div>
+        <div class="r-end" style="margin-left:auto">
+          <button class="rowbtn" onclick="openPreview('${p.id}')">Preview</button>
+          <button class="rowbtn" onclick="openPost('${p.id}')">Edit</button></div>
       </div>
       <div class="slides">${p.script.map((s,n)=>`<span class="slide"><i>${String(n+1).padStart(2,'0')}</i>${esc(s)}</span>`).join('')}</div>
       ${p.caption?`<div class="hint" style="margin-top:12px">Caption: ${esc(p.caption)}</div>`:''}
@@ -538,13 +674,162 @@ function renderCal(){
     return `<div class="cal-cell${c.key===tk?' today':''}" onclick="openPost(null,'${c.key}')">
       <div class="dn">${c.d}</div>
       ${ps.map(p=>{const pl=PLATFORMS[acct(p.account).platform];
-        return `<button class="chip" style="border-left-color:${pl.color}" onclick="event.stopPropagation();openPost('${p.id}')">${esc(p.hook)}</button>`;}).join('')}
+        return `<button class="chip" style="border-left-color:${pl.color}" onclick="event.stopPropagation();openPreview('${p.id}')">${esc(p.hook)}</button>`;}).join('')}
     </div>`;}).join('');
 }
 
 /* ------------------------------------------------------------------ modal */
-function closeModal(){document.getElementById('ovl').classList.remove('on');}
-function openModal(html){document.getElementById('modal').innerHTML=html;document.getElementById('ovl').classList.add('on');}
+function closeModal(){
+  document.getElementById('ovl').classList.remove('on');
+  document.getElementById('modal').dataset.pv='';
+}
+function openModal(html,cls){
+  const m=document.getElementById('modal');
+  m.className='modal'+(cls?' '+cls:'');
+  m.dataset.pv='';
+  m.innerHTML=html;
+  document.getElementById('ovl').classList.add('on');
+}
+
+/* ---------------------------------------------------------------- preview
+   Clicking a post opens the SLIDES, in the chrome of the platform it is going
+   to. Three skins over one carousel, so the same post can be judged as TikTok,
+   as Instagram and as a pin without leaving the row. */
+const ICON={
+  heart:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-8-5-8-10.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 8 3.5C20 16 12 21 12 21z"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h3v4l5-4h8a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"/></svg>',
+  mark:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>',
+  share:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 12l18-8-4 18-5-6-2 5-1-6-6-3z"/></svg>',
+  note:'<svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V6l10-2v12M9 18a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0zm10-2a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/></svg>',
+  igHeart:'<svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.7-7.5-10A4 4 0 0 1 12 7.4 4 4 0 0 1 19.5 10.5c0 5.3-7.5 10-7.5 10z"/></svg>',
+  igChat:'<svg viewBox="0 0 24 24"><path d="M20.5 11.7c0 4.1-3.8 7.4-8.5 7.4a9.8 9.8 0 0 1-2.6-.35L4.5 20.5l1.4-3.6a7.1 7.1 0 0 1-2.4-5.2c0-4.1 3.8-7.4 8.5-7.4s8.5 3.3 8.5 7.4z"/></svg>',
+  igSend:'<svg viewBox="0 0 24 24"><path d="M21.5 3.5 2.5 10.2l7.4 2.8 2.8 7.5 8.8-17z"/><path d="M9.9 13 21.5 3.5"/></svg>',
+  igMark:'<svg viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-3.9-6 3.9z"/></svg>'
+};
+let PV={id:null,plat:null,i:0};
+const atname=h=>/\s/.test(h)?h:(h.startsWith('@')?h:'@'+h);
+const nfmt=n=>n>=1000?(n/1000).toFixed(n>=10000?0:1).replace('.0','')+'K':String(n||0);
+
+function openPreview(id){
+  const p=DB.posts.find(x=>x.id===id);if(!p)return;
+  PV={id,plat:acct(p.account).platform,i:0};
+  pvRender();
+}
+function pvPlat(pl){PV.plat=pl;PV.i=0;pvRender();}
+function pvGo(d){
+  const p=DB.posts.find(x=>x.id===PV.id);const n=(p.media||[]).length||1;
+  PV.i=(PV.i+d+n)%n;pvRender();
+}
+function pvSet(i){PV.i=i;pvRender();}
+
+function pvRender(){
+  const p=DB.posts.find(x=>x.id===PV.id);if(!p)return;
+  const a=acct(p.account), media=p.media||[], n=media.length;
+  const src=n?media[Math.min(PV.i,n-1)]:null;
+  const handle=atname(a.handle);
+  const initial=(a.handle||'S').trim()[0].toUpperCase();
+  const dots=Array.from({length:n},(_,i)=>`<i class="${i===PV.i?'on':''}"></i>`).join('');
+  const counter=n?`${PV.i+1}/${n}`:'no slides';
+
+  let frame;
+  if(!src){
+    frame=`<div class="dev"><div class="tt" style="display:grid;place-items:center;color:#666;
+      font-size:13px;text-align:center;padding:24px">No images attached to this post yet.<br>
+      Add paths in Edit, one per line.</div></div>`;
+  } else if(PV.plat==='tiktok'){
+    frame=`<div class="dev"><div class="tt">
+      <img src="${src}" alt="">
+      <div class="top"><span>Following</span><b>For You</b></div>
+      <div class="cnt">${counter}</div>
+      <div class="rail">
+        <div class="av">${initial}<span class="plus">+</span></div>
+        <div class="it">${ICON.heart}<span>${nfmt(p.likes)}</span></div>
+        <div class="it">${ICON.chat}<span>${nfmt(p.comments)}</span></div>
+        <div class="it">${ICON.mark}<span>${nfmt(p.saves)}</span></div>
+        <div class="it">${ICON.share}<span>Share</span></div>
+      </div>
+      <div class="foot">
+        <div class="dots">${dots}</div>
+        <div class="hd">${esc(handle)}</div>
+        <div class="cp">${esc(p.caption||p.hook)}</div>
+        <div class="mu">${ICON.note}<span>original sound</span></div>
+      </div></div></div>`;
+  } else if(PV.plat==='instagram'){
+    frame=`<div class="dev"><div class="ig">
+      <div class="hd"><span class="ring"><span>${initial}</span></span>
+        <span><div class="nm">${esc(handle)}</div><div class="sub">${esc(p.niche||'')}</div></span>
+        <span class="more">•••</span></div>
+      <div class="frame"><img src="${src}" alt=""><div class="cnt">${counter}</div></div>
+      <div class="pg">${dots}</div>
+      <div class="acts">${ICON.igHeart}${ICON.igChat}${ICON.igSend}<span class="sp"></span>${ICON.igMark}</div>
+      <div class="body">
+        <div class="lk">${nfmt(p.likes)} likes</div>
+        <div class="cp"><b>${esc(handle)}</b>${esc(p.caption||p.hook)}</div>
+        <div class="cm">View all ${nfmt(p.comments)} comments</div>
+        <div class="tm">${fmtDate(p.date)}</div>
+      </div></div></div>`;
+  } else {
+    frame=`<div class="dev pinboard"><div class="pn">
+      <div class="pin"><img src="${src}" alt=""><span class="save">Save</span>
+        <span class="cnt">${counter}</span></div>
+      <div class="below">
+        <div class="ttl">${esc(p.hook)}</div>
+        <div class="ds">${esc(p.caption||'')}</div>
+        <div class="who"><span class="av">${initial}</span><span class="nm">${esc(handle)}</span></div>
+      </div></div></div>`;
+  }
+
+  const tabs=[['tiktok','TikTok'],['instagram','Instagram'],['pinterest','Pinterest']]
+    .map(t=>`<button class="pv-tab${PV.plat===t[0]?' on':''}" onclick="pvPlat('${t[0]}')">${t[1]}</button>`).join('');
+
+  const lines=(p.script||[]).length
+    ? p.script.map((s,i)=>`<div class="pv-line${i===PV.i?' now':''}" onclick="pvSet(${i})">
+        <i>${String(i+1).padStart(2,'0')}</i><span>${esc(s)}</span></div>`).join('')
+    : '<div class="hint">No script written for this post yet.</div>';
+
+  // Instagram crops a 9:16 image to 4:5 — say so rather than letting a cropped cover line
+  // reach the feed unnoticed. This is exactly the class of thing a preview exists to catch.
+  const note=PV.plat==='instagram'
+    ? 'Instagram crops these 9:16 slides to 4:5. Check the cover line survives the crop.'
+    : PV.plat==='pinterest'
+      ? 'Pinterest treats each image as its own pin. This carousel needs splitting into 9.'
+      : 'TikTok photo mode, native 9:16. No crop.';
+
+  openModal(`<div class="pv">
+    <div class="pv-stage">
+      <div class="pv-tabs">${tabs}</div>
+      ${frame}
+      <div class="pv-nav">
+        <button onclick="pvGo(-1)">‹</button>
+        <span class="cnt">${counter}</span>
+        <button onclick="pvGo(1)">›</button>
+      </div>
+      <div class="pv-note">${note}</div>
+    </div>
+    <div class="pv-meta">
+      <h4>${esc(p.hook)}</h4>
+      <div class="mutedtxt" style="font-size:13px">${esc(p.niche||'')}</div>
+      <dl class="pv-kv">
+        <dt>Account</dt><dd>${PLATFORMS[a.platform].name} · ${esc(a.handle)}</dd>
+        <dt>Date</dt><dd>${fmtDate(p.date)}</dd>
+        <dt>Status</dt><dd>${statusBadge(p.status)}</dd>
+        <dt>Slides</dt><dd>${p.slides||0} on ${p.model||'lite'}</dd>
+        <dt>Cost</dt><dd class="num">${money(cost(p))}</dd>
+        <dt>Views</dt><dd class="num">${(p.views||0).toLocaleString()}</dd>
+        <dt>Saves</dt><dd class="num">${(p.saves||0).toLocaleString()} (${rate(p.saves||0,p.views||0)})</dd>
+      </dl>
+      <div class="sect" style="margin-top:0">Caption</div>
+      <div class="pv-cap">${esc(p.caption||'—')}</div>
+      <div class="sect">Slides · click a line to jump</div>
+      ${lines}
+      <div class="mfoot">
+        <button class="btn" onclick="closeModal()">Close</button>
+        <button class="btn primary" onclick="openPost('${p.id}')">Edit</button>
+      </div>
+    </div></div>`,'wide');
+  // keep arrow keys working while the preview is up
+  document.getElementById('modal').dataset.pv='1';
+}
 
 function openPost(id,presetDate){
   const p=DB.posts.find(x=>x.id===id)||{id:null,date:presetDate||todayKey(),account:DB.accounts[0].id,
@@ -562,6 +847,7 @@ function openPost(id,presetDate){
       <div><label class="fl">Saves</label><input class="f" type="number" min="0" id="f_saves" value="${p.saves||0}"></div>
       <div class="full"><label class="fl">Script, one slide per line</label><textarea class="f" id="f_script" rows="6">${esc((p.script||[]).join('\n'))}</textarea></div>
       <div class="full"><label class="fl">Caption</label><textarea class="f" id="f_caption" rows="2">${esc(p.caption||'')}</textarea></div>
+      <div class="full"><label class="fl">Image paths, one per line — these drive the preview</label><textarea class="f" id="f_media" rows="3">${esc((p.media||[]).join('\n'))}</textarea></div>
     </div>
     <div class="hint">Cost is computed from slides multiplied by the model rate. It is never typed in by hand, so it cannot drift from what we actually spent.</div>
     <div class="mfoot">
@@ -575,7 +861,8 @@ function savePost(id){
   const g=x=>document.getElementById('f_'+x).value;
   const rec={id:id||uid('p'),date:g('date'),account:g('acct'),hook:g('hook').trim(),niche:g('niche').trim(),
     status:g('status'),slides:+g('slides')||0,model:g('model'),views:+g('views')||0,saves:+g('saves')||0,
-    script:g('script').split('\n').map(s=>s.trim()).filter(Boolean),caption:g('caption').trim()};
+    script:g('script').split('\n').map(s=>s.trim()).filter(Boolean),caption:g('caption').trim(),
+    media:g('media').split('\n').map(s=>s.trim()).filter(Boolean)};
   if(!rec.hook){alert('A post needs a hook.');return;}
   const i=DB.posts.findIndex(p=>p.id===id);
   if(i>=0)DB.posts[i]=Object.assign(DB.posts[i],rec);else DB.posts.push(rec);
