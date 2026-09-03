@@ -492,8 +492,9 @@ const PLATFORMS={tiktok:{name:'TikTok',color:'#7c72ff'},instagram:{name:'Instagr
 const RATE={lite:0.0336,pro:0.1344};   // per image, measured
 // The real slides built 3 Sep, deployed alongside this page. Relative paths so the app works
 // the same on localhost and on Pages — an absolute /media/ path 404s under a project subpath.
-const MEDIA_CLINIC01=Array.from({length:9},(_,i)=>`media/clinic-01/clinic-01-${String(i+1).padStart(2,'0')}.jpg`);
-const MEDIA_SUARA01=Array.from({length:6},(_,i)=>`media/suara-01/suara-01-${String(i+1).padStart(2,'0')}.jpg`);
+const media=(slug,n)=>Array.from({length:n},(_,i)=>`media/${slug}/${slug}-${String(i+1).padStart(2,'0')}.jpg`);
+const MEDIA_CLINIC=media('clinic-02',9), MEDIA_TRADES=media('trades-01',9),
+      MEDIA_FOOD=media('cafe-01',9),    MEDIA_SUARA=media('suara-01',6);
 const SEED={
   // ⭐ THE PERSONA BELONGS TO THE PAGE, NOT THE IDEA (Reza, 3 Sep). One idea sent to three
   // accounts comes back as three scripts. These starters encode what the platform previews
@@ -554,39 +555,44 @@ width it ends up a third of the frame and reads as a screenshot.`}
   // One post per persona, with the lines ACTUALLY WRITTEN — an empty script was the whole
   // complaint. Clinic slides were generated (9 images, $0.30); the Suara slides were
   // COMPOSITED from sheets we already paid for, so generated is 0 and they cost nothing new.
+  // ⭐ REWRITTEN AFTER REZA'S CALL: three of nine lines were IDENTICAL across all three
+  // niches ("hands only, no faces", "love this light"). That is templating, not writing — the
+  // reference post worked because its lines could only belong to pilates. Every line here now
+  // names something that exists in exactly one trade, and each image was regenerated to match
+  // its new line rather than left to drift.
   posts:[
     {id:'p-cl',date:'2026-09-04',account:'cl-tt',hook:'extremely chic content ideas',niche:'aesthetic clinic',
      status:'scheduled',slides:9,generated:9,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:MEDIA_CLINIC01,script:['extremely chic content ideas / • aesthetic clinic •','the tray before anyone touches it','hands only, no faces','the walk to the treatment room','love this light','one drop, up close','restocking the shelf','your team laughing, not posing','closing up at 7pm'],
-     caption:'content ideas for your clinic that take five minutes to shoot #aestheticclinic #skinclinic #medspa #clinicmarketing #esthetician'},
+     media:MEDIA_CLINIC,script:['extremely chic content ideas / • aesthetic clinic •','the tray laid out before the first client','the consult form, pen resting on it','one ampoule held up to the window','the mask lit, nobody wearing it','the towel warmer opening','the shelf restocked in one straight line','your team in the mirror before doors open','the last lamp off at seven'],
+     caption:'nine things to film in your clinic before the first client #aestheticclinic #skinclinic #medspa #clinicmarketing #esthetician'},
     {id:'p-cl-ig',date:'2026-09-04',account:'cl-ig',hook:'extremely chic content ideas',niche:'aesthetic clinic',
      status:'draft',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:MEDIA_CLINIC01,script:['extremely chic content ideas / • aesthetic clinic •','the tray before anyone touches it','hands only, no faces','the walk to the treatment room','love this light','one drop, up close','restocking the shelf','your team laughing, not posing','closing up at 7pm'],
-     caption:'Cross post. Check the cover line survives the 4:5 crop before this goes out.'},
+     media:MEDIA_CLINIC,script:['extremely chic content ideas / • aesthetic clinic •','the tray laid out before the first client','the consult form, pen resting on it','one ampoule held up to the window','the mask lit, nobody wearing it','the towel warmer opening','the shelf restocked in one straight line','your team in the mirror before doors open','the last lamp off at seven'],
+     caption:'Cross post. Drop one slide and check the cover survives the 4:5 crop.'},
 
-    {id:'p-tr',date:'2026-09-05',account:'tr-tt',hook:'content ideas that take five minutes on site',niche:'electricians',
-     status:'script',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:[],script:['content ideas that take five minutes on site / • electricians •','the van at 6am, doors open','the consumer unit, labelled properly','hands only, no faces','love this light in an empty build','the tool wall, everything in its place','your apprentice on day one','the cable drum from above','locking up at dusk'],
-     caption:'nine things to film between jobs #electrician #sparky #tradesofinstagram #trademarketing #ukelectrician'},
-    {id:'p-tr-ig',date:'2026-09-05',account:'tr-ig',hook:'content ideas that take five minutes on site',niche:'electricians',
-     status:'script',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:[],script:['content ideas that take five minutes on site / • electricians •','the van at 6am, doors open','the consumer unit, labelled properly','hands only, no faces','love this light in an empty build','the tool wall, everything in its place','your apprentice on day one','the cable drum from above','locking up at dusk'],caption:'Cross post. Trim to 8 slides for the 4:5 crop.'},
+    {id:'p-tr',date:'2026-09-05',account:'tr-tt',hook:'content ideas that take five minutes',niche:'electricians',
+     status:'scheduled',slides:9,generated:9,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_TRADES,script:['content ideas that take five minutes / • electricians •','the van racked out at six','first fix, every cable dressed','the board labelled in your own hand','a conduit bend that came out right','the tester reading what it should','the cover going back on','your apprentice, first cable','boots on the mat at the end of it'],
+     caption:'nine things to film between jobs #electrician #sparky #firstfix #tradesmarketing #ukelectrician'},
+    {id:'p-tr-ig',date:'2026-09-05',account:'tr-ig',hook:'content ideas that take five minutes',niche:'electricians',
+     status:'draft',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_TRADES,script:['content ideas that take five minutes / • electricians •','the van racked out at six','first fix, every cable dressed','the board labelled in your own hand','a conduit bend that came out right','the tester reading what it should','the cover going back on','your apprentice, first cable','boots on the mat at the end of it'],caption:'Cross post. Trim to 8 for the 4:5 crop.'},
 
     {id:'p-fd',date:'2026-09-06',account:'fd-tt',hook:'content ideas for your cafe',niche:'cafe',
-     status:'script',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:[],script:['content ideas for your cafe / • five minutes each •','the first pour of the day','steam on the glass at 7am','hands only, no faces','the pastry case still full','love this light on the counter','the chalkboard being rewritten','your barista laughing, not posing','chairs on tables, lights off'],
-     caption:'the hour before opening is the whole content plan #cafeowner #coffeeshop #smallbusiness #cafemarketing #barista'},
+     status:'scheduled',slides:9,generated:9,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_FOOD,script:['content ideas for your cafe / • five minutes each •','the grinder dialled in before anyone arrives','the first shot, poured away','steam on the inside of the window','the case before it gets touched','one pour, no retake','the chalkboard half rewritten','the queue from behind the machine','chairs going up on the tables'],
+     caption:'the hour before opening is the whole content plan #cafeowner #coffeeshop #barista #cafemarketing #smallbusiness'},
     {id:'p-fd-ig',date:'2026-09-06',account:'fd-ig',hook:'content ideas for your cafe',niche:'cafe',
-     status:'script',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:[],script:['content ideas for your cafe / • five minutes each •','the first pour of the day','steam on the glass at 7am','hands only, no faces','the pastry case still full','love this light on the counter','the chalkboard being rewritten','your barista laughing, not posing','chairs on tables, lights off'],caption:'Cross post. Trim to 8 slides for the 4:5 crop.'},
+     status:'draft',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_FOOD,script:['content ideas for your cafe / • five minutes each •','the grinder dialled in before anyone arrives','the first shot, poured away','steam on the inside of the window','the case before it gets touched','one pour, no retake','the chalkboard half rewritten','the queue from behind the machine','chairs going up on the tables'],caption:'Cross post. Trim to 8 for the 4:5 crop.'},
 
     {id:'p-su',date:'2026-09-07',account:'su-tt',hook:'how i would design for',niche:'five different industries',
      status:'scheduled',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:MEDIA_SUARA01,script:['how i would design for / • five different industries •','skincare','cold pressed juice','accountancy','electrical','architectural glazing'],
+     media:MEDIA_SUARA,script:['how i would design for / • five different industries •','a skincare brand','a cold pressed juice brand','an accountancy firm','an electrical contractor','an architectural glazier'],
      caption:'five industries, one system #branddesign #graphicdesign #socialmediadesign #designportfolio'},
     {id:'p-su-ig',date:'2026-09-07',account:'su-ig',hook:'how i would design for',niche:'five different industries',
      status:'draft',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
-     media:MEDIA_SUARA01,script:['how i would design for / • five different industries •','skincare','cold pressed juice','accountancy','electrical','architectural glazing'],
+     media:MEDIA_SUARA,script:['how i would design for / • five different industries •','a skincare brand','a cold pressed juice brand','an accountancy firm','an electrical contractor','an architectural glazier'],
      caption:'Cross post. The sheets are cover-cropped to the hero card, not letterboxed.'}
   ],
   hooks:[
@@ -602,7 +608,7 @@ width it ends up a third of the frame and reads as a screenshot.`}
 };
 
 /* ------------------------------------------------------------------ store */
-const KEY='studio.v2';   // v1 pointed at three accounts that no longer exist
+const KEY='studio.v3';   // v2 carried the templated lines and the old clinic images
 let DB=load();
 function load(){
   try{const r=localStorage.getItem(KEY);if(r)return migrate(JSON.parse(r));}catch(e){}
