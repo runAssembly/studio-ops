@@ -463,6 +463,15 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
       </div>
     </div>
     <div class="tiles" id="acctTiles"></div>
+    <div class="sect">Personas — the voice each page writes in</div>
+    <div class="rows" id="personaRows"></div>
+    <div class="sect">Script service</div>
+    <div class="card">
+      <label class="fl">Endpoint URL (leave empty and every post falls back to Copy brief)</label>
+      <input class="f" id="svcUrl" placeholder="https://studio-script-....run.app"
+             onchange="saveSvc(this.value)">
+      <div class="hint" id="svcState"></div>
+    </div>
     <div class="sect">Where the data lives</div>
     <div class="card">
       <div style="font-size:13.5px;color:var(--body)">This page saves to your browser only (localStorage). It is not synced between devices and it is not a server. Export JSON before switching machines. Wiring it to a real store is the next step if you want two people editing it.</div>
@@ -485,10 +494,29 @@ const RATE={lite:0.0336,pro:0.1344};   // per image, measured
 // the same on localhost and on Pages — an absolute /media/ path 404s under a project subpath.
 const MEDIA_CLINIC01=Array.from({length:9},(_,i)=>`media/clinic-01/clinic-01-${String(i+1).padStart(2,'0')}.jpg`);
 const SEED={
+  // ⭐ THE PERSONA BELONGS TO THE PAGE, NOT THE IDEA (Reza, 3 Sep). One idea sent to three
+  // accounts comes back as three scripts. These starters encode what the platform previews
+  // already taught us — the 4:5 crop, the pin-per-image rule — so they are not placeholder prose.
   accounts:[
-    {id:'a1',platform:'tiktok',handle:'handle TBD',followers:0},
-    {id:'a2',platform:'instagram',handle:'handle TBD',followers:0},
-    {id:'a3',platform:'pinterest',handle:'handle TBD',followers:0}
+    {id:'a1',platform:'tiktok',handle:'handle TBD',followers:0,persona:
+`Voice: a working social media manager talking to other people in the trade. Lowercase, dry,
+never salesy. Writes the way she captions her own camera roll.
+Subject: content ideas for one niche per post, named on the cover.
+Format: 9 to 11 slides, native 9:16, no crop. One short line per slide, six words is a good
+length. Half the lines name a literal thing to shoot, half are a reaction to the picture.
+Never: sentence case, full stops, emoji, hashtags on the image, or any promise of a result.`},
+    {id:'a2',platform:'instagram',handle:'handle TBD',followers:0,persona:
+`Voice: same person as the TikTok page, a shade more polished. Still lowercase.
+Subject: the same content ideas, but the cover has to survive a crop.
+Format: 8 slides maximum, and the cover line must sit in the middle third because Instagram
+crops 9:16 down to 4:5 and beheads anything near the top. Measured, not guessed.
+Never: put the promise in the top or bottom sixth of the cover.`},
+    {id:'a3',platform:'pinterest',handle:'handle TBD',followers:0,persona:
+`Voice: plain and searchable, not chatty. Pinterest is a search engine, not a feed.
+Subject: one idea per pin, since Pinterest treats every image as its own pin.
+Format: each line must stand alone with no memory of the slide before it. Lead with the noun a
+person would actually type into the search bar.
+Never: write a line that only makes sense as slide 7 of something.`}
   ],
   posts:[
     {id:'p1',date:'2026-09-04',account:'a1',hook:'extremely chic content ideas',niche:'aesthetic clinic',
@@ -502,6 +530,7 @@ const SEED={
      status:'draft',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,script:[],
      caption:'Pinterest wants each slide as its own pin. Split before scheduling.'}
   ],
+  settings:{scriptService:''},
   hooks:[
     {id:'h1',text:'extremely chic content ideas',source:'reference @sherbabyyyyy',used:1,views:14891,saves:479},
     {id:'h2',text:'can we normalize this type of content',source:'reference @sherbabyyyyy',used:0,views:1494,saves:44}
@@ -530,6 +559,13 @@ function migrate(db){
   for(const s of SEED.posts){
     const p=db.posts.find(x=>x.id===s.id);
     if(p&&!(p.media&&p.media.length)&&s.media)p.media=s.media.slice();
+  }
+  if(!db.settings)db.settings={scriptService:''};
+  // Personas were added after people already had a stored copy. Backfill from the seed only
+  // where the account has none — never overwrite one that has been edited.
+  for(const a of SEED.accounts){
+    const c=db.accounts.find(x=>x.id===a.id);
+    if(c&&!c.persona)c.persona=a.persona;
   }
   // `generated` did not exist before, and `undefined * rate` is NaN — which would render as
   // "$NaN" rather than failing loudly. Backfill from the seed where we know the answer, 0
@@ -612,7 +648,7 @@ function renderScope(){
 }
 
 /* ---------------------------------------------------------------- renders */
-function renderAll(){renderScope();renderTiles();renderUpcoming();renderAccounts();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
+function renderAll(){renderScope();renderTiles();renderUpcoming();renderAccounts();renderPersonas();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
 
 function renderTiles(){
   const month=scoped().filter(p=>p.date.slice(0,7)===monthKey());
@@ -663,6 +699,98 @@ function renderAccounts(){
     return `<div class="tile"><div class="lab"><span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span></div>
       <div class="num">${ps.length}</div>
       <div class="note">${esc(a.handle)} · ${v.toLocaleString()} views · ${sv.toLocaleString()} saves</div></div>`;}).join('');
+}
+
+function renderPersonas(){
+  document.getElementById('personaRows').innerHTML=DB.accounts.map(a=>{
+    const pl=PLATFORMS[a.platform];
+    const txt=(a.persona||'').trim();
+    return `<div class="idea">
+      <div class="bd">
+        <div class="t"><span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span></div>
+        <div class="s" style="white-space:pre-wrap;margin-top:8px;color:var(--muted)">${esc(txt)||'No persona yet.'}</div>
+      </div>
+      <div class="ac"><button class="rowbtn" onclick="openPersona('${a.id}')">Edit</button></div>
+    </div>`;}).join('');
+  const u=(DB.settings&&DB.settings.scriptService)||'';
+  const el=document.getElementById('svcUrl'); if(el&&el.value!==u)el.value=u;
+  const st=document.getElementById('svcState');
+  if(st)st.textContent=u
+    ? 'Set. "Write the script" calls it directly.'
+    : 'Not set — the service is not deployed yet (assembly-control has no Artifact Registry '
+      +'grant for this agent). Until then every post offers Copy brief instead.';
+}
+function saveSvc(v){DB.settings=DB.settings||{};DB.settings.scriptService=v.trim();save();}
+function openPersona(id){
+  const a=DB.accounts.find(x=>x.id===id);if(!a)return;
+  openModal(`<h3>${PLATFORMS[a.platform].name} persona</h3>
+    <label class="fl">Handle</label><input class="f" id="pa_handle" value="${esc(a.handle)}">
+    <div style="height:14px"></div>
+    <label class="fl">Persona — voice, subject, format, and what it never does</label>
+    <textarea class="f" id="pa_text" rows="12">${esc(a.persona||'')}</textarea>
+    <div class="hint">Every script written for this page starts from this text. The house rules
+      (no promised results, no invented facts) sit under it and win if they ever conflict.</div>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="savePersona('${a.id}')">Save</button>
+    </div>`);
+}
+function savePersona(id){
+  const a=DB.accounts.find(x=>x.id===id);if(!a)return;
+  a.handle=document.getElementById('pa_handle').value.trim()||a.handle;
+  a.persona=document.getElementById('pa_text').value;
+  closeModal();save();
+}
+
+/* ------------------------------------------------- writing the slide lines
+   One path, two endings. With a service URL it writes the lines. Without one it
+   hands you the exact brief to paste somewhere that can. The fallback exists
+   because the service is blocked on an IAM grant I do not have — better a seam
+   you can see than a button that quietly does nothing. */
+function brief(p){
+  const a=acct(p.account);
+  return [`Write ${Math.max(1,(p.slides||9)-1)} slide lines for a ${PLATFORMS[a.platform].name} carousel.`,
+    ``,`PERSONA for this page:`,(a.persona||'(none set)'),
+    ``,`Cover line (already written, do not repeat it): ${(p.script||[])[0]||p.hook}`,
+    `Topic: ${p.hook}`,`Niche: ${p.niche||'unspecified'}`,
+    p.caption&&/^reference: /.test(p.caption)?`Modelled on: ${p.caption.replace(/^reference: /,'')}`:'',
+    ``,`One short lowercase line per slide. No full stops, no emoji, no hashtags.`,
+    `Never promise a result or invent a statistic.`].filter(x=>x!==null).join('\n');
+}
+async function writeScript(id){
+  const p=DB.posts.find(x=>x.id===id);if(!p)return;
+  const a=acct(p.account);
+  const url=(DB.settings&&DB.settings.scriptService||'').trim();
+  if(!url){
+    const text=brief(p);
+    openModal(`<h3>Brief for ${esc(PLATFORMS[a.platform].name)}</h3>
+      <div class="hint">The script service is not deployed yet, so here is the exact brief.
+        Paste it to me, paste the lines back into the post's script box.</div>
+      <textarea class="f" id="bf" rows="16" style="margin-top:12px">${esc(text)}</textarea>
+      <div class="mfoot">
+        <button class="btn" onclick="closeModal()">Close</button>
+        <button class="btn primary" onclick="copyBrief()">Copy</button>
+      </div>`);
+    return;
+  }
+  const btn=document.getElementById('ws'); if(btn)btn.textContent='Writing…';
+  try{
+    const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({hook:p.hook,niche:p.niche,slides:p.slides||9,persona:a.persona||'',
+        reference:(p.caption||'').replace(/^reference: /,'')})});
+    const j=await r.json();
+    if(!r.ok||!j.lines)throw new Error(j.error||('service '+r.status));
+    p.script=j.lines; save();
+    closeModal(); openPreview(p.id);
+  }catch(e){
+    warn('Could not write the script: '+e.message);
+    if(btn)btn.textContent='Write the script';
+  }
+}
+function copyBrief(){
+  const t=document.getElementById('bf');
+  t.select(); document.execCommand('copy');
+  const b=document.querySelector('#modal .btn.primary'); if(b)b.textContent='Copied';
 }
 
 function renderPosts(){
@@ -721,6 +849,7 @@ function renderIdeas(){
       <div class="bd"><div class="t">${esc(i.text)}</div>${src}${stats}</div>
       <div class="ac">
         <button class="rowbtn" onclick="promote('${i.id}')">Make a post</button>
+        <button class="rowbtn" onclick="promoteAll('${i.id}')">Send to all ${DB.accounts.length}</button>
         <button class="rowbtn" onclick="delIdea('${i.id}')">Delete</button>
       </div></div>`;}).join(''):'<div class="empty">No ideas yet.</div>';
 }
@@ -1004,6 +1133,7 @@ function pvRender(){
       ${lines}
       <div class="mfoot">
         <button class="btn" onclick="closeModal()">Close</button>
+        <button class="btn" id="ws" onclick="writeScript('${p.id}')">Write the script</button>
         <button class="btn primary" onclick="openPost('${p.id}')">Edit</button>
       </div>
     </div></div>`,'wide');
@@ -1099,20 +1229,29 @@ function saveIdea(id){
   closeModal();save();
 }
 function delIdea(id){DB.ideas=DB.ideas.filter(i=>i.id!==id);save();}
+// Build one script post for one account. Shared by promote() and promoteAll() so the two
+// cannot drift — an idea sent to three pages must be the same object three times, differing
+// only by the account whose persona will write it.
+function draftFrom(it,accountId){
+  const hook=it.text.slice(0,80);
+  const cover=it.niche?`${hook} / • ${it.niche} •`:hook;
+  return {id:uid('p'),date:todayKey(),account:accountId,
+    hook,niche:it.niche,status:'script',slides:it.slides||9,generated:0,model:'lite',
+    views:0,saves:0,script:[cover],media:[],
+    caption:it.link?('reference: '+it.link):''};
+}
+function promoteAll(id){
+  const it=DB.ideas.find(x=>x.id===id);if(!it)return;
+  DB.ideas=DB.ideas.filter(x=>x.id!==id);
+  DB.accounts.forEach(a=>DB.posts.push(draftFrom(it,a.id)));
+  save();show('posts');
+}
 function promote(id){
   const it=DB.ideas.find(x=>x.id===id);if(!it)return;
   DB.ideas=DB.ideas.filter(x=>x.id!==id);
   // ⭐ SCRIPT FIRST, NO IMAGES. Reza's call and it is the right order: the words decide
-  // whether the post is worth making, and images are the only part that costs money. So a
-  // promoted idea lands as a `script` with the cover line already in our format, the
-  // reference's own slide count as the plan, and generated:0 so it bills nothing.
-  const hook=it.text.slice(0,80);
-  const cover=it.niche?`${hook} / • ${it.niche} •`:hook;
-  DB.posts.push({id:uid('p'),date:todayKey(),account:FILT||DB.accounts[0].id,
-    hook,niche:it.niche,status:'script',slides:it.slides||9,generated:0,model:'lite',
-    views:0,saves:0,script:[cover],media:[],
-    // carry the source through — otherwise the post loses what it was modelled on
-    caption:it.link?('reference: '+it.link):''});
+  // whether the post is worth making, and images are the only part that costs money.
+  DB.posts.push(draftFrom(it,FILT||DB.accounts[0].id));
   save();show('posts');
 }
 
