@@ -493,44 +493,102 @@ const RATE={lite:0.0336,pro:0.1344};   // per image, measured
 // The real slides built 3 Sep, deployed alongside this page. Relative paths so the app works
 // the same on localhost and on Pages — an absolute /media/ path 404s under a project subpath.
 const MEDIA_CLINIC01=Array.from({length:9},(_,i)=>`media/clinic-01/clinic-01-${String(i+1).padStart(2,'0')}.jpg`);
+const MEDIA_SUARA01=Array.from({length:6},(_,i)=>`media/suara-01/suara-01-${String(i+1).padStart(2,'0')}.jpg`);
 const SEED={
   // ⭐ THE PERSONA BELONGS TO THE PAGE, NOT THE IDEA (Reza, 3 Sep). One idea sent to three
   // accounts comes back as three scripts. These starters encode what the platform previews
   // already taught us — the 4:5 crop, the pin-per-image rule — so they are not placeholder prose.
+  // FOUR PERSONAS, each with a TikTok and an Instagram — Reza, 3 Sep. The persona belongs to
+  // the page: one idea sent to several accounts must come back in several voices.
+  // ⛔ Handles are left as TBD on purpose. Inventing one risks landing on a real account or a
+  // real mark, which is exactly the mistake "Kestrel" was the day before.
   accounts:[
-    {id:'a1',platform:'tiktok',handle:'handle TBD',followers:0,persona:
-`Voice: a working social media manager talking to other people in the trade. Lowercase, dry,
-never salesy. Writes the way she captions her own camera roll.
-Subject: content ideas for one niche per post, named on the cover.
-Format: 9 to 11 slides, native 9:16, no crop. One short line per slide, six words is a good
-length. Half the lines name a literal thing to shoot, half are a reaction to the picture.
-Never: sentence case, full stops, emoji, hashtags on the image, or any promise of a result.`},
-    {id:'a2',platform:'instagram',handle:'handle TBD',followers:0,persona:
-`Voice: same person as the TikTok page, a shade more polished. Still lowercase.
-Subject: the same content ideas, but the cover has to survive a crop.
-Format: 8 slides maximum, and the cover line must sit in the middle third because Instagram
-crops 9:16 down to 4:5 and beheads anything near the top. Measured, not guessed.
-Never: put the promise in the top or bottom sixth of the cover.`},
-    {id:'a3',platform:'pinterest',handle:'handle TBD',followers:0,persona:
-`Voice: plain and searchable, not chatty. Pinterest is a search engine, not a feed.
-Subject: one idea per pin, since Pinterest treats every image as its own pin.
-Format: each line must stand alone with no memory of the slide before it. Lead with the noun a
-person would actually type into the search bar.
-Never: write a line that only makes sense as slide 7 of something.`}
+    {id:'cl-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Clinics',persona:
+`Who: a freelance social media manager who only works with skin clinics, aesthetics and wellness.
+Voice: lowercase, dry, talking to other people in the trade. Captions her own camera roll.
+Subject: content ideas for one clinic type per post, named on the cover.
+Format: 9 to 11 slides, native 9:16, no crop. One short lowercase line per slide, six words is a
+good length. Half name a literal thing to shoot, half are a reaction to the picture.
+Never: a before-and-after, a result, a claim about what a treatment does. In this vertical that
+is not a style choice, it is the regulated line. Every idea must be legal to post.`},
+    {id:'cl-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Clinics',persona:
+`Same person as the clinics TikTok, a shade more polished. Still lowercase.
+Format: 8 slides maximum, and the cover line must sit in the MIDDLE THIRD, because Instagram
+crops 9:16 down to 4:5 and beheads anything near the top. Measured on our own slides, not guessed.
+Never: put the promise in the top or bottom sixth of the cover. No before-and-afters.`},
+    {id:'tr-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Trades',persona:
+`Who: a social media manager for trades — electricians, plumbers, builders, roofers.
+Voice: lowercase, plain, no gloss. Sounds like someone who has been on a site at 6am.
+Subject: content a two-van outfit can actually shoot between jobs.
+Format: 9 slides, 9:16. One short line each. Work in progress, tools, vans, the crew.
+Never: promise a price, a lead volume or an income. No slur on other trades. No unsafe practice
+shown as a flex — no ladders on boxes, no working live.`},
+    {id:'tr-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Trades',persona:
+`Same person as the trades TikTok. Slightly tidier, still not corporate.
+Format: 8 slides, cover line in the middle third for the 4:5 crop.
+Never: a price promise, an unsafe shot, or a dig at another trade.`},
+    {id:'fd-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Cafe and food',persona:
+`Who: a social media manager for cafes, bakeries and small food places.
+Voice: lowercase, warm, unhurried. Notices light and steam and hands.
+Subject: the hour before opening and the hour after closing, which is when the good shots are.
+Format: 9 slides, 9:16. One short line each. Product, process, people, room.
+Never: a health claim, a nutrition claim, or anything about allergens. Never invent a dish, a
+price or an opening time — those change and a wrong one costs the client a customer.`},
+    {id:'fd-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Cafe and food',persona:
+`Same person as the food TikTok. Format: 8 slides, cover line in the middle third for the 4:5
+crop. Never a health or allergen claim, never an invented price or opening time.`},
+    {id:'su-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Suara',persona:
+`Who: Suara's own page. This one is not a niche persona, it is the portfolio.
+Voice: quiet and confident. The work carries it, the words just point.
+Subject: real work we have already made. Cover is always "how i would design for" plus an
+industry; each slide is one industry with the actual sheet.
+Format: a cover in the first sheet's own field colour, then one slide per industry. The slides
+are COMPOSITED FROM REAL ASSETS, never regenerated — regenerating would change the work.
+Never: show a client's logo we do not have the right to, and never present a spec piece as a
+paid engagement.`},
+    {id:'su-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Suara',persona:
+`Same as the Suara TikTok. Format: the cover line sits in the middle third for the 4:5 crop, and
+a landscape sheet must be cover-cropped to the hero card rather than letterboxed — fitted to
+width it ends up a third of the frame and reads as a screenshot.`}
   ],
+  // One post per persona, with the lines ACTUALLY WRITTEN — an empty script was the whole
+  // complaint. Clinic slides were generated (9 images, $0.30); the Suara slides were
+  // COMPOSITED from sheets we already paid for, so generated is 0 and they cost nothing new.
   posts:[
-    {id:'p1',date:'2026-09-04',account:'a1',hook:'extremely chic content ideas',niche:'aesthetic clinic',
-     status:'scheduled',slides:9,generated:9,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,
-     script:['extremely chic content ideas / • aesthetic clinic •','the tray before anyone touches it','hands only, no faces','the walk to the treatment room','love this light','one drop, up close','restocking the shelf','your team laughing, not posing','closing up at 7pm'],
+    {id:'p-cl',date:'2026-09-04',account:'cl-tt',hook:'extremely chic content ideas',niche:'aesthetic clinic',
+     status:'scheduled',slides:9,generated:9,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_CLINIC01,script:['extremely chic content ideas / • aesthetic clinic •','the tray before anyone touches it','hands only, no faces','the walk to the treatment room','love this light','one drop, up close','restocking the shelf','your team laughing, not posing','closing up at 7pm'],
      caption:'content ideas for your clinic that take five minutes to shoot #aestheticclinic #skinclinic #medspa #clinicmarketing #esthetician'},
-    {id:'p2',date:'2026-09-04',account:'a2',hook:'extremely chic content ideas',niche:'aesthetic clinic',
-     status:'scheduled',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,script:[],
-     caption:'Same carousel, cross posted. Instagram crops 9:16 to 4:5 — check the cover line survives.'},
-    {id:'p3',date:'2026-09-05',account:'a3',hook:'extremely chic content ideas',niche:'aesthetic clinic',
-     status:'draft',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,media:MEDIA_CLINIC01,script:[],
-     caption:'Pinterest wants each slide as its own pin. Split before scheduling.'}
+    {id:'p-cl-ig',date:'2026-09-04',account:'cl-ig',hook:'extremely chic content ideas',niche:'aesthetic clinic',
+     status:'draft',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_CLINIC01,script:['extremely chic content ideas / • aesthetic clinic •','the tray before anyone touches it','hands only, no faces','the walk to the treatment room','love this light','one drop, up close','restocking the shelf','your team laughing, not posing','closing up at 7pm'],
+     caption:'Cross post. Check the cover line survives the 4:5 crop before this goes out.'},
+
+    {id:'p-tr',date:'2026-09-05',account:'tr-tt',hook:'content ideas that take five minutes on site',niche:'electricians',
+     status:'script',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:['content ideas that take five minutes on site / • electricians •','the van at 6am, doors open','the consumer unit, labelled properly','hands only, no faces','love this light in an empty build','the tool wall, everything in its place','your apprentice on day one','the cable drum from above','locking up at dusk'],
+     caption:'nine things to film between jobs #electrician #sparky #tradesofinstagram #trademarketing #ukelectrician'},
+    {id:'p-tr-ig',date:'2026-09-05',account:'tr-ig',hook:'content ideas that take five minutes on site',niche:'electricians',
+     status:'script',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:['content ideas that take five minutes on site / • electricians •','the van at 6am, doors open','the consumer unit, labelled properly','hands only, no faces','love this light in an empty build','the tool wall, everything in its place','your apprentice on day one','the cable drum from above','locking up at dusk'],caption:'Cross post. Trim to 8 slides for the 4:5 crop.'},
+
+    {id:'p-fd',date:'2026-09-06',account:'fd-tt',hook:'content ideas for your cafe',niche:'cafe',
+     status:'script',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:['content ideas for your cafe / • five minutes each •','the first pour of the day','steam on the glass at 7am','hands only, no faces','the pastry case still full','love this light on the counter','the chalkboard being rewritten','your barista laughing, not posing','chairs on tables, lights off'],
+     caption:'the hour before opening is the whole content plan #cafeowner #coffeeshop #smallbusiness #cafemarketing #barista'},
+    {id:'p-fd-ig',date:'2026-09-06',account:'fd-ig',hook:'content ideas for your cafe',niche:'cafe',
+     status:'script',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:['content ideas for your cafe / • five minutes each •','the first pour of the day','steam on the glass at 7am','hands only, no faces','the pastry case still full','love this light on the counter','the chalkboard being rewritten','your barista laughing, not posing','chairs on tables, lights off'],caption:'Cross post. Trim to 8 slides for the 4:5 crop.'},
+
+    {id:'p-su',date:'2026-09-07',account:'su-tt',hook:'how i would design for',niche:'five different industries',
+     status:'scheduled',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_SUARA01,script:['how i would design for / • five different industries •','skincare','cold pressed juice','accountancy','electrical','architectural glazing'],
+     caption:'five industries, one system #branddesign #graphicdesign #socialmediadesign #designportfolio'},
+    {id:'p-su-ig',date:'2026-09-07',account:'su-ig',hook:'how i would design for',niche:'five different industries',
+     status:'draft',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:MEDIA_SUARA01,script:['how i would design for / • five different industries •','skincare','cold pressed juice','accountancy','electrical','architectural glazing'],
+     caption:'Cross post. The sheets are cover-cropped to the hero card, not letterboxed.'}
   ],
-  settings:{scriptService:''},
   hooks:[
     {id:'h1',text:'extremely chic content ideas',source:'reference @sherbabyyyyy',used:1,views:14891,saves:479},
     {id:'h2',text:'can we normalize this type of content',source:'reference @sherbabyyyyy',used:0,views:1494,saves:44}
@@ -544,7 +602,7 @@ Never: write a line that only makes sense as slide 7 of something.`}
 };
 
 /* ------------------------------------------------------------------ store */
-const KEY='studio.v1';
+const KEY='studio.v2';   // v1 pointed at three accounts that no longer exist
 let DB=load();
 function load(){
   try{const r=localStorage.getItem(KEY);if(r)return migrate(JSON.parse(r));}catch(e){}
@@ -597,6 +655,8 @@ function warn(msg){
 }
 const uid=p=>p+Math.random().toString(36).slice(2,8);
 const acct=id=>DB.accounts.find(a=>a.id===id)||DB.accounts[0];
+// Two accounts share each platform now, so the platform name alone is ambiguous.
+const aname=a=>(a.label?a.label+' · ':'')+PLATFORMS[a.platform].name;
 // ⛔ COST IS WHAT WE GENERATED, NOT WHAT WE PLANNED. This used to multiply `slides`, so a
 // post billed 30c for images that did not exist yet — and the SAME carousel cross posted to
 // three accounts billed three times. Overview read $0.91 when real spend was $0.30.
@@ -641,7 +701,7 @@ function renderScope(){
   const btn=(id,label,color,n)=>`<button class="sc${FILT===id?' on':''}" onclick="setScope(${id?`'${id}'`:'null'})">
     ${color?`<span class="d" style="background:${color}"></span>`:''}${label}<span class="n">${n}</span></button>`;
   const html=btn(null,'All accounts','',DB.posts.length)
-    +DB.accounts.map(a=>btn(a.id,PLATFORMS[a.platform].name,PLATFORMS[a.platform].color,
+    +DB.accounts.map(a=>btn(a.id,aname(a),PLATFORMS[a.platform].color,
         DB.posts.filter(p=>p.account===a.id).length)).join('');
   ['overview','calendar','posts','scripts'].forEach(v=>{
     const el=document.getElementById('scope-'+v); if(el)el.innerHTML=html;});
@@ -668,12 +728,12 @@ function renderTiles(){
 }
 
 function renderUpcoming(){
-  const up=scoped().filter(p=>p.status!=='live').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  const up=scoped().filter(p=>p.status!=='live').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
   document.getElementById('upcoming').innerHTML = up.length? up.map(p=>{
     const a=acct(p.account),pl=PLATFORMS[a.platform];
     return `<div class="row" style="cursor:pointer" onclick="openPreview('${p.id}')"><div>
       <div class="r-t">${esc(p.hook)}</div>
-      <div class="r-s">${pl.name} · ${p.niche||''} · ${fmtDate(p.date)}</div></div>
+      <div class="r-s">${esc(aname(a))} · ${p.niche||''} · ${fmtDate(p.date)}</div></div>
       <div class="r-end">
         <span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span>
         ${statusBadge(p.status)}
@@ -691,12 +751,12 @@ function renderAccounts(){
   document.getElementById('acctNav').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     return `<button class="acct${FILT===a.id?' on':''}" onclick="setScope('${a.id}');show('posts')"><span class="sw" style="background:${pl.color}"></span>
-      <span><span class="an">${pl.name}</span><br><span class="ah">${esc(a.handle)}</span></span></button>`;}).join('');
+      <span><span class="an">${esc(a.label||pl.name)}</span><br><span class="ah">${pl.name.toLowerCase()}</span></span></button>`;}).join('');
   document.getElementById('acctTiles').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     const ps=DB.posts.filter(p=>p.account===a.id);
     const v=ps.reduce((s,p)=>s+(p.views||0),0), sv=ps.reduce((s,p)=>s+(p.saves||0),0);
-    return `<div class="tile"><div class="lab"><span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span></div>
+    return `<div class="tile"><div class="lab"><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></div>
       <div class="num">${ps.length}</div>
       <div class="note">${esc(a.handle)} · ${v.toLocaleString()} views · ${sv.toLocaleString()} saves</div></div>`;}).join('');
 }
@@ -707,7 +767,7 @@ function renderPersonas(){
     const txt=(a.persona||'').trim();
     return `<div class="idea">
       <div class="bd">
-        <div class="t"><span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span></div>
+        <div class="t"><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></div>
         <div class="s" style="white-space:pre-wrap;margin-top:8px;color:var(--muted)">${esc(txt)||'No persona yet.'}</div>
       </div>
       <div class="ac"><button class="rowbtn" onclick="openPersona('${a.id}')">Edit</button></div>
@@ -723,7 +783,7 @@ function renderPersonas(){
 function saveSvc(v){DB.settings=DB.settings||{};DB.settings.scriptService=v.trim();save();}
 function openPersona(id){
   const a=DB.accounts.find(x=>x.id===id);if(!a)return;
-  openModal(`<h3>${PLATFORMS[a.platform].name} persona</h3>
+  openModal(`<h3>${esc(aname(a))} persona</h3>
     <label class="fl">Handle</label><input class="f" id="pa_handle" value="${esc(a.handle)}">
     <div style="height:14px"></div>
     <label class="fl">Persona — voice, subject, format, and what it never does</label>
@@ -749,7 +809,7 @@ function savePersona(id){
    you can see than a button that quietly does nothing. */
 function brief(p){
   const a=acct(p.account);
-  return [`Write ${Math.max(1,(p.slides||9)-1)} slide lines for a ${PLATFORMS[a.platform].name} carousel.`,
+  return [`Write ${Math.max(1,(p.slides||9)-1)} slide lines for a ${aname(a)} carousel.`,
     ``,`PERSONA for this page:`,(a.persona||'(none set)'),
     ``,`Cover line (already written, do not repeat it): ${(p.script||[])[0]||p.hook}`,
     `Topic: ${p.hook}`,`Niche: ${p.niche||'unspecified'}`,
@@ -763,7 +823,7 @@ async function writeScript(id){
   const url=(DB.settings&&DB.settings.scriptService||'').trim();
   if(!url){
     const text=brief(p);
-    openModal(`<h3>Brief for ${esc(PLATFORMS[a.platform].name)}</h3>
+    openModal(`<h3>Brief for ${esc(aname(a))}</h3>
       <div class="hint">The script service is not deployed yet, so here is the exact brief.
         Paste it to me, paste the lines back into the post's script box.</div>
       <textarea class="f" id="bf" rows="16" style="margin-top:12px">${esc(text)}</textarea>
@@ -801,7 +861,7 @@ function renderPosts(){
     return `<tr style="cursor:pointer" onclick="openPreview('${p.id}')">
       <td class="num dimtxt">${p.date}</td>
       <td class="hook">${esc(p.hook)}<div class="dimtxt" style="font-size:12px">${esc(p.niche||'')}</div></td>
-      <td><span class="badge"><span class="d" style="background:${pl.color}"></span>${pl.name}</span></td>
+      <td><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></td>
       <td>${statusBadge(p.status)}</td>
       <td class="num">${p.generated||0}<span class="dimtxt">/${p.slides||0}</span></td>
       <td class="num">${money(cost(p))}</td>
@@ -952,7 +1012,7 @@ function renderScripts(){
     return `<div class="card tight" style="margin-bottom:8px">
       <div style="display:flex;align-items:center;gap:12px">
         <div><div class="r-t" style="color:var(--white);font-size:14px">${esc(p.hook)}</div>
-        <div class="r-s">${pl.name} · ${p.script.length} of ${p.slides||p.script.length} lines written · ${fmtDate(p.date)}</div></div>
+        <div class="r-s">${esc(aname(a))} · ${p.script.length} of ${p.slides||p.script.length} lines written · ${fmtDate(p.date)}</div></div>
         <div class="r-end" style="margin-left:auto">
           <button class="rowbtn" onclick="openPreview('${p.id}')">Preview</button>
           <button class="rowbtn" onclick="openPost('${p.id}')">Edit</button></div>
@@ -1119,7 +1179,7 @@ function pvRender(){
       <h4>${esc(p.hook)}</h4>
       <div class="mutedtxt" style="font-size:13px">${esc(p.niche||'')}</div>
       <dl class="pv-kv">
-        <dt>Account</dt><dd>${PLATFORMS[a.platform].name} · ${esc(a.handle)}</dd>
+        <dt>Account</dt><dd>${esc(aname(a))} · ${esc(a.handle)}</dd>
         <dt>Date</dt><dd>${fmtDate(p.date)}</dd>
         <dt>Status</dt><dd>${statusBadge(p.status)}</dd>
         <dt>Slides</dt><dd>${p.generated||0} made of ${p.slides||0} planned, on ${p.model||'lite'}</dd>
