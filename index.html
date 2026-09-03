@@ -413,7 +413,7 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
     </div>
     <div class="scope" id="scope-posts"></div>
     <div class="card"><table class="tbl">
-      <thead><tr><th>Date</th><th>Hook</th><th>Account</th><th>Status</th><th>Made / planned</th><th>Cost</th><th>Views</th><th>Saves</th><th>Save rate</th><th></th></tr></thead>
+      <thead><tr><th>Date</th><th>Hook</th><th>Account</th><th>Status</th><th>Images / planned</th><th>Cost</th><th>Views</th><th>Saves</th><th>Save rate</th><th></th></tr></thead>
       <tbody id="postRows"></tbody>
     </table><div class="empty" id="postsEmpty" style="display:none">No posts yet.</div></div>
   </div></section>
@@ -863,7 +863,7 @@ function renderPosts(){
       <td class="hook">${esc(p.hook)}<div class="dimtxt" style="font-size:12px">${esc(p.niche||'')}</div></td>
       <td><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></td>
       <td>${statusBadge(p.status)}</td>
-      <td class="num">${p.generated||0}<span class="dimtxt">/${p.slides||0}</span></td>
+      <td class="num">${(p.media||[]).length}<span class="dimtxt">/${p.slides||0}</span></td>
       <td class="num">${money(cost(p))}</td>
       <td class="num">${(p.views||0).toLocaleString()}</td>
       <td class="num">${(p.saves||0).toLocaleString()}</td>
@@ -1182,7 +1182,7 @@ function pvRender(){
         <dt>Account</dt><dd>${esc(aname(a))} · ${esc(a.handle)}</dd>
         <dt>Date</dt><dd>${fmtDate(p.date)}</dd>
         <dt>Status</dt><dd>${statusBadge(p.status)}</dd>
-        <dt>Slides</dt><dd>${p.generated||0} made of ${p.slides||0} planned, on ${p.model||'lite'}</dd>
+        <dt>Slides</dt><dd>${(p.media||[]).length} of ${p.slides||0} planned${p.generated?`, ${p.generated} generated on ${p.model||'lite'}`:', none newly generated'}</dd>
         <dt>Cost</dt><dd class="num">${money(cost(p))}</dd>
         <dt>Views</dt><dd class="num">${(p.views||0).toLocaleString()}</dd>
         <dt>Saves</dt><dd class="num">${(p.saves||0).toLocaleString()} (${rate(p.saves||0,p.views||0)})</dd>
