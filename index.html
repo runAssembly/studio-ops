@@ -210,6 +210,14 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .idea .ac{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex:none}
 .idea a{color:var(--muted);font-size:12px;text-decoration:none}
 .idea a:hover{color:var(--body);text-decoration:underline}
+.daily{background:rgba(228,242,34,.05);border-radius:var(--r-card);
+  box-shadow:rgba(228,242,34,.22) 0 0 0 1px inset;padding:20px 22px;margin-bottom:8px}
+.daily .cap{font-size:11px;text-transform:uppercase;letter-spacing:-.015em;color:var(--lime)}
+.daily .hk{font-size:17px;color:var(--white);margin:8px 0 4px;line-height:1.35}
+.daily .met{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin-top:8px}
+.daily .met b{font-family:var(--mono);color:var(--body);font-weight:400}
+.daily .acts{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.daily .why{font-size:12px;color:var(--dim);margin-top:10px;line-height:1.45}
 .xt{display:grid;grid-template-columns:82px 1fr;gap:14px;background:rgba(255,255,255,.02);
   border-radius:var(--r-btn);padding:14px;margin-top:14px}
 .xt img{width:82px;border-radius:var(--r-badge);display:block}
@@ -440,6 +448,8 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
         <button class="btn" onclick="openIdea()">Add by hand</button>
       </div>
     </div>
+    <div id="dailyBox"></div>
+    <div class="sect">Your backlog</div>
     <div class="rows" id="ideaRows"></div>
   </div></section>
 
@@ -714,7 +724,7 @@ function renderScope(){
 }
 
 /* ---------------------------------------------------------------- renders */
-function renderAll(){renderScope();renderTiles();renderUpcoming();renderAccounts();renderPersonas();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
+function renderAll(){renderDaily();renderScope();renderTiles();renderUpcoming();renderAccounts();renderPersonas();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
 
 function renderTiles(){
   const month=scoped().filter(p=>p.date.slice(0,7)===monthKey());
@@ -892,6 +902,71 @@ function renderHooks(){
         <span class="bar"><span style="width:${Math.min(100,r/best*100)}%"></span></span></div></td>
       <td style="text-align:right"><button class="rowbtn" onclick="openHook('${h.id}')">Edit</button></td>
     </tr>`;}).join('');
+}
+
+/* ------------------------------------------------- hook of the day
+   Written each morning by tools/hook_scan.py and published beside this page as
+   daily.json, because a static site has no cron of its own.
+   ⛔ It ranks a WATCHLIST by saves-gained-per-day. It is not a search of TikTok —
+   open search, profile listing and the RSS bridges are all blocked from our box,
+   and the card says so rather than implying a discovery engine. */
+let DAILY=null;
+async function loadDaily(){
+  try{
+    const r=await fetch('daily.json',{cache:'no-store'});
+    if(!r.ok)throw new Error('daily.json '+r.status);
+    DAILY=await r.json();
+  }catch(e){ DAILY={error:e.message}; }
+  renderDaily();
+}
+function renderDaily(){
+  const el=document.getElementById('dailyBox'); if(!el)return;
+  if(!DAILY){el.innerHTML='';return;}
+  if(DAILY.error||!DAILY.winner){
+    el.innerHTML=`<div class="daily"><div class="cap">Hook of the day</div>
+      <div class="why">No scan available: ${esc(DAILY.error||DAILY.basis||'nothing fetched')}.
+        Run <span class="num">tools/hook_scan.py</span> and republish.</div></div>`;
+    return;
+  }
+  const w=DAILY.winner;
+  const vel=w.saves_per_day===null?'not measured yet':`${w.saves_per_day}/day`;
+  const when=(DAILY.generated||'').replace('T',' ').replace('+00:00',' UTC');
+  el.innerHTML=`<div class="daily">
+    <div class="cap">Hook of the day · ranked on ${esc(DAILY.basis)}</div>
+    <div class="hk">${esc(w.hook)}</div>
+    <div class="mutedtxt" style="font-size:12.5px">${esc(w.author)} · ${w.slides} slides ·
+      <a href="${esc(w.url)}" target="_blank" rel="noopener" style="color:var(--muted)">open original</a></div>
+    <div class="met">
+      <span>saves gained <b>${esc(vel)}</b></span>
+      <span>save rate <b>${w.save_rate}%</b></span>
+      <span>views <b>${(w.views||0).toLocaleString()}</b></span>
+      <span>saves <b>${(w.saves||0).toLocaleString()}</b></span>
+    </div>
+    <div class="acts">
+      <button class="btn primary" onclick="dailyToAll()">Send to all ${DB.accounts.length} accounts</button>
+      <button class="btn" onclick="dailyToBacklog()">Just add to backlog</button>
+    </div>
+    <div class="why">Scanned ${esc(when)} across ${DAILY.watchlist_size} watched posts${
+      DAILY.failures&&DAILY.failures.length?`, ${DAILY.failures.length} could not be fetched`:''}.
+      This ranks a watchlist by how fast each post is gaining saves. It is not a search of TikTok:
+      open search, profile listing and the RSS bridges are all blocked from our box, so a post only
+      enters the list when someone drops its link in.</div>
+  </div>`;
+}
+function dailyIdea(){
+  const w=DAILY&&DAILY.winner; if(!w)return null;
+  return {id:uid('i'),text:w.hook,niche:w.niche||'',link:w.url,cover:w.cover||'',
+          author:w.author,views:w.views,saves:w.saves,slides:w.slides};
+}
+function dailyToBacklog(){
+  const it=dailyIdea(); if(!it)return;
+  if(DB.ideas.some(x=>x.link===it.link)){warn('That one is already in the backlog.');return;}
+  DB.ideas.unshift(it); save(); show('ideas');
+}
+function dailyToAll(){
+  const it=dailyIdea(); if(!it)return;
+  DB.accounts.forEach(a=>DB.posts.push(draftFrom(it,a.id)));
+  save(); show('posts');
 }
 
 function renderIdeas(){
@@ -1342,7 +1417,7 @@ function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMo
 function fmtDate(k){const [y,m,d]=k.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'});}
 
-buildNav();renderAll();
+buildNav();renderAll();loadDaily();
 </script>
 </body>
 </html>
