@@ -75,6 +75,8 @@ h1,h2,h3{font-weight:590;color:var(--white);letter-spacing:-.022em}
 .acct{display:flex;align-items:center;gap:9px;padding:6px 10px;border-radius:var(--r-btn);
   width:100%;text-align:left;transition:background .12s}
 .acct:hover{background:rgba(255,255,255,.04)}
+.acct.on{background:rgba(255,255,255,.07)}
+.acct.on .an{color:var(--white)}
 .acct .sw{width:7px;height:7px;border-radius:var(--r-pill);flex:none}
 .acct .an{font-size:13px;color:var(--body)}
 .acct .ah{font-size:11px;color:var(--dim);font-family:var(--mono)}
@@ -185,6 +187,34 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
   border-radius:var(--r-badge);padding:4px 9px}
 .slide i{font-family:var(--mono);color:var(--dim);font-style:normal;margin-right:6px}
 .empty{color:var(--dim);font-size:13.5px;padding:26px 0;text-align:center}
+/* scope filter — ONE control, rendered into every view that lists posts */
+.scope{display:flex;gap:6px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+.scope .sc{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);
+  background:rgba(255,255,255,.05);border-radius:var(--r-pill);padding:5px 13px;transition:.12s}
+.scope .sc:hover{color:var(--body)}
+.scope .sc.on{background:var(--body);color:var(--void);font-weight:510}
+.scope .sc .d{width:6px;height:6px;border-radius:50%;flex:none}
+.scope .sc .n{font-family:var(--mono);font-size:11px;opacity:.65}
+/* idea rows carry a reference thumbnail once one has been pulled from a link */
+.idea{display:flex;gap:14px;align-items:flex-start;background:rgba(255,255,255,.02);
+  border-radius:var(--r-btn);box-shadow:rgba(0,0,0,.4) 0 2px 4px;padding:12px 16px;transition:.12s}
+.idea:hover{background:rgba(255,255,255,.045)}
+.idea .th{width:52px;height:80px;border-radius:var(--r-badge);object-fit:cover;flex:none;
+  background:var(--slate)}
+.idea .bd{flex:1;min-width:0}
+.idea .t{font-size:13.5px;color:var(--white);line-height:1.45}
+.idea .s{font-size:12px;color:var(--dim);margin-top:4px}
+.idea .st{display:flex;gap:16px;margin-top:8px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+.idea .st b{font-family:var(--mono);color:var(--body);font-weight:400}
+.idea .ac{display:flex;flex-direction:column;gap:3px;align-items:flex-end;flex:none}
+.idea a{color:var(--muted);font-size:12px;text-decoration:none}
+.idea a:hover{color:var(--body);text-decoration:underline}
+.xt{display:grid;grid-template-columns:82px 1fr;gap:14px;background:rgba(255,255,255,.02);
+  border-radius:var(--r-btn);padding:14px;margin-top:14px}
+.xt img{width:82px;border-radius:var(--r-badge);display:block}
+.xt .k{font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:-.015em}
+.xt .v{font-size:13px;color:var(--body);margin:2px 0 9px;line-height:1.45}
+.err{color:#f0a08f;font-size:12.5px;margin-top:10px;line-height:1.45}
 .sect{font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:-.015em;
   margin:28px 0 10px}
 .bar{height:4px;border-radius:var(--r-pill);background:rgba(255,255,255,.07);overflow:hidden;
@@ -339,6 +369,7 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
       <div><h1>Overview</h1><div class="sub">Three accounts, one content engine. Every number here is entered or measured, never estimated.</div></div>
       <div class="acts"><button class="btn primary" onclick="openPost()">New post</button></div>
     </div>
+    <div class="scope" id="scope-overview"></div>
     <div class="tiles" id="tiles"></div>
     <div class="sect">Next out the door</div>
     <div class="rows" id="upcoming"></div>
@@ -363,6 +394,7 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
         <button class="btn" onclick="shiftMonth(1)">→</button>
       </div>
     </div>
+    <div class="scope" id="scope-calendar"></div>
     <div class="cal">
       <div class="cal-head"><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div><div>Sun</div></div>
       <div class="cal-grid" id="calGrid"></div>
@@ -375,6 +407,7 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
       <div><h1>Posts</h1><div class="sub">Every piece, what it cost to make, and what it did.</div></div>
       <div class="acts"><button class="btn primary" onclick="openPost()">New post</button></div>
     </div>
+    <div class="scope" id="scope-posts"></div>
     <div class="card"><table class="tbl">
       <thead><tr><th>Date</th><th>Hook</th><th>Account</th><th>Status</th><th>Slides</th><th>Cost</th><th>Views</th><th>Saves</th><th>Save rate</th><th></th></tr></thead>
       <tbody id="postRows"></tbody>
@@ -397,8 +430,11 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
   <!-- =============================================================== IDEAS -->
   <section class="view" id="v-ideas"><div class="page">
     <div class="ptop">
-      <div><h1>Ideas</h1><div class="sub">The backlog. Promote one to a post when it is ready to shoot.</div></div>
-      <div class="acts"><button class="btn" onclick="openIdea()">Add idea</button></div>
+      <div><h1>Ideas</h1><div class="sub">Drop a TikTok link and the concept comes back with its real numbers. Promote one to a post when it is ready to shoot.</div></div>
+      <div class="acts">
+        <button class="btn primary" onclick="openExtract()">Add from link</button>
+        <button class="btn" onclick="openIdea()">Add by hand</button>
+      </div>
     </div>
     <div class="rows" id="ideaRows"></div>
   </div></section>
@@ -408,6 +444,7 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
     <div class="ptop">
       <div><h1>Scripts</h1><div class="sub">The words on each slide, in order. This is what gets typeset onto the images.</div></div>
     </div>
+    <div class="scope" id="scope-scripts"></div>
     <div class="rows" id="scriptRows"></div>
   </div></section>
 
@@ -539,27 +576,45 @@ document.addEventListener('keydown',e=>{
   const n=parseInt(e.key,10); if(n>=1&&n<=VIEWS.length)show(VIEWS[n-1][0]);
 });
 
+/* ------------------------------------------------------------------ scope
+   One account filter, shared by every view that lists posts. Held in memory,
+   NOT in the store: it is a way of looking, not a piece of data, and persisting
+   it would silently hide posts on the next visit with no clue why. */
+let FILT=null;                       // null = all accounts
+const inScope=p=>!FILT||p.account===FILT;
+const scoped=()=>DB.posts.filter(inScope);
+function setScope(id){FILT=id;renderAll();}
+function renderScope(){
+  const btn=(id,label,color,n)=>`<button class="sc${FILT===id?' on':''}" onclick="setScope(${id?`'${id}'`:'null'})">
+    ${color?`<span class="d" style="background:${color}"></span>`:''}${label}<span class="n">${n}</span></button>`;
+  const html=btn(null,'All accounts','',DB.posts.length)
+    +DB.accounts.map(a=>btn(a.id,PLATFORMS[a.platform].name,PLATFORMS[a.platform].color,
+        DB.posts.filter(p=>p.account===a.id).length)).join('');
+  ['overview','calendar','posts','scripts'].forEach(v=>{
+    const el=document.getElementById('scope-'+v); if(el)el.innerHTML=html;});
+}
+
 /* ---------------------------------------------------------------- renders */
-function renderAll(){renderTiles();renderUpcoming();renderAccounts();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
+function renderAll(){renderScope();renderTiles();renderUpcoming();renderAccounts();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
 
 function renderTiles(){
-  const month=DB.posts.filter(p=>p.date.slice(0,7)===monthKey());
-  const spend=DB.posts.reduce((s,p)=>s+cost(p),0);
-  const live=DB.posts.filter(p=>p.status==='live');
+  const month=scoped().filter(p=>p.date.slice(0,7)===monthKey());
+  const spend=scoped().reduce((s,p)=>s+cost(p),0);
+  const live=scoped().filter(p=>p.status==='live');
   const views=live.reduce((s,p)=>s+(p.views||0),0);
   const saves=live.reduce((s,p)=>s+(p.saves||0),0);
   document.getElementById('tiles').innerHTML=[
     // ⛔ the per-image rate needs 4dp — money() rounded $0.0336 to "$0.03", which is a
     //    wrong number on screen even though the total above it was right.
-    ['Spend, all posts',money(spend),DB.posts.length+' posts at $'+RATE.lite.toFixed(4)+' an image'],
-    ['Scheduled',String(DB.posts.filter(p=>p.status==='scheduled').length),'in '+monthName()],
+    ['Spend, all posts',money(spend),scoped().length+' posts at $'+RATE.lite.toFixed(4)+' an image'],
+    ['Scheduled',String(scoped().filter(p=>p.status==='scheduled').length),'in '+monthName()],
     ['Live',String(live.length), live.length?'':'nothing published yet'],
     ['Save rate, live',rate(saves,views), views? saves.toLocaleString()+' saves / '+views.toLocaleString()+' views':'no data of our own yet']
   ].map(t=>`<div class="tile"><div class="lab">${t[0]}</div><div class="num">${t[1]}</div><div class="note">${t[2]}</div></div>`).join('');
 }
 
 function renderUpcoming(){
-  const up=DB.posts.filter(p=>p.status!=='live').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
+  const up=scoped().filter(p=>p.status!=='live').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,6);
   document.getElementById('upcoming').innerHTML = up.length? up.map(p=>{
     const a=acct(p.account),pl=PLATFORMS[a.platform];
     return `<div class="row" style="cursor:pointer" onclick="openPreview('${p.id}')"><div>
@@ -581,7 +636,7 @@ function statusBadge(s){
 function renderAccounts(){
   document.getElementById('acctNav').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
-    return `<button class="acct" onclick="show('accounts')"><span class="sw" style="background:${pl.color}"></span>
+    return `<button class="acct${FILT===a.id?' on':''}" onclick="setScope('${a.id}');show('posts')"><span class="sw" style="background:${pl.color}"></span>
       <span><span class="an">${pl.name}</span><br><span class="ah">${esc(a.handle)}</span></span></button>`;}).join('');
   document.getElementById('acctTiles').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
@@ -593,7 +648,7 @@ function renderAccounts(){
 }
 
 function renderPosts(){
-  const rows=DB.posts.slice().sort((a,b)=>b.date.localeCompare(a.date));
+  const rows=scoped().slice().sort((a,b)=>b.date.localeCompare(a.date));
   document.getElementById('postsEmpty').style.display=rows.length?'none':'block';
   document.getElementById('postRows').innerHTML=rows.map(p=>{
     const a=acct(p.account),pl=PLATFORMS[a.platform];
@@ -628,16 +683,123 @@ function renderHooks(){
 }
 
 function renderIdeas(){
-  document.getElementById('ideaRows').innerHTML=DB.ideas.length?DB.ideas.map(i=>
-    `<div class="row"><div><div class="r-t">${esc(i.text)}</div><div class="r-s">${esc(i.niche||'')}</div></div>
-      <div class="r-end">
+  document.getElementById('ideaRows').innerHTML=DB.ideas.length?DB.ideas.map(i=>{
+    // ⛔ onerror, not a bare <img>. These thumbnails are signed CDN URLs that expire in about
+    // two weeks; without this the row would show a grey rectangle and look like our bug.
+    const thumb=i.cover
+      ? `<img class="th" src="${esc(i.cover)}" alt="" onerror="this.style.display='none'">`
+      : '';
+    const stats=(i.views||i.saves)
+      ? `<div class="st">
+           <span>views <b>${(i.views||0).toLocaleString()}</b></span>
+           <span>saves <b>${(i.saves||0).toLocaleString()}</b></span>
+           <span>save rate <b>${rate(i.saves||0,i.views||0)}</b></span>
+           ${i.slides?`<span>slides <b>${i.slides}</b></span>`:''}
+         </div>` : '';
+    const src=i.link
+      ? `<div class="s">${esc(i.author||'')} · <a href="${esc(i.link)}" target="_blank" rel="noopener">open original</a></div>`
+      : `<div class="s">${esc(i.niche||'')}</div>`;
+    return `<div class="idea">${thumb}
+      <div class="bd"><div class="t">${esc(i.text)}</div>${src}${stats}</div>
+      <div class="ac">
         <button class="rowbtn" onclick="promote('${i.id}')">Make a post</button>
         <button class="rowbtn" onclick="delIdea('${i.id}')">Delete</button>
-      </div></div>`).join(''):'<div class="empty">No ideas yet.</div>';
+      </div></div>`;}).join(''):'<div class="empty">No ideas yet.</div>';
+}
+
+/* ------------------------------------------------- extract from a link
+   TikTok resolves LIVE in the browser: tikwm.com returns
+   `access-control-allow-origin: *`, verified 3 Sep, so the published page can
+   call it with no backend of ours. Instagram's oembed needs an app token (302s
+   without one) and Pinterest's returns 400 — neither is usable from a static
+   page, so those save the link and get extracted by hand. Say which is which
+   rather than letting a silent failure look like a bug. */
+let XT=null;
+function openExtract(){
+  XT=null;
+  openModal(`<h3>Add an idea from a link</h3>
+    <label class="fl">Reference URL</label>
+    <input class="f" id="x_url" placeholder="https://www.tiktok.com/@someone/photo/123..." >
+    <div class="hint">TikTok links resolve here and now, caption, slide count, views and saves.
+      Instagram and Pinterest do not expose anything open, so those are saved as a link for me
+      to pull by hand.</div>
+    <div id="x_out"></div>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" id="x_go" onclick="runExtract()">Extract</button>
+    </div>`);
+  setTimeout(()=>document.getElementById('x_url').focus(),30);
+}
+
+// One shot at tikwm, one retry — its free tier is capped at 1 request/second and returns
+// code -1 with that message rather than a 429, so a naive caller reads it as "no data".
+async function tikwm(url,attempt=0){
+  const r=await fetch('https://www.tikwm.com/api/?url='+encodeURIComponent(url)+'&hd=1');
+  const j=await r.json();
+  if(j.code!==0&&/limit/i.test(j.msg||'')&&attempt<2){
+    await new Promise(s=>setTimeout(s,1300));
+    return tikwm(url,attempt+1);
+  }
+  return j;
+}
+
+async function runExtract(){
+  const url=document.getElementById('x_url').value.trim();
+  const out=document.getElementById('x_out'), go=document.getElementById('x_go');
+  if(!url){out.innerHTML='<div class="err">Paste a link first.</div>';return;}
+  if(!/tiktok\.com/i.test(url)){
+    const host=(url.match(/^https?:\/\/([^\/]+)/)||[,'that site'])[1];
+    XT={text:'',link:url,niche:'',manual:true};
+    out.innerHTML=`<div class="xt"><div></div><div>
+      <div class="k">Not extractable from the browser</div>
+      <div class="v">${esc(host)} does not expose an open endpoint, so nothing can be pulled here.
+        Save it as a link and I will pull the concept and the numbers by hand.</div>
+      <label class="fl">Your note</label>
+      <input class="f" id="x_text" placeholder="What is worth stealing from it">
+      </div></div>`;
+    go.textContent='Save link'; go.setAttribute('onclick','saveExtract()');
+    return;
+  }
+  go.textContent='Reading…'; out.innerHTML='';
+  try{
+    const j=await tikwm(url);
+    if(j.code!==0)throw new Error(j.msg||'the API refused it');
+    const d=j.data;
+    const title=d.title||'';
+    const tags=(title.match(/#[\wÀ-ɏ]+/g)||[]).map(t=>t.slice(1));
+    const hook=title.replace(/#[\wÀ-ɏ]+/g,'').trim().replace(/\s+/g,' ');
+    const slides=(d.images||[]).length;
+    XT={text:hook||title||'(no caption)',link:url,niche:tags[0]||'',
+        cover:d.cover||'',author:'@'+((d.author||{}).unique_id||''),
+        views:d.play_count||0,saves:d.collect_count||0,likes:d.digg_count||0,
+        comments:d.comment_count||0,slides};
+    out.innerHTML=`<div class="xt">
+      <img src="${esc(XT.cover)}" alt="" onerror="this.style.visibility='hidden'">
+      <div>
+        <div class="k">Hook</div><div class="v">${esc(XT.text)||'—'}</div>
+        <div class="k">Format</div><div class="v">${slides?slides+' slide carousel':'video'} · ${esc(XT.author)}</div>
+        <div class="k">Measured</div><div class="v">${XT.views.toLocaleString()} views · ${XT.saves.toLocaleString()} saves · ${rate(XT.saves,XT.views)} save rate</div>
+        <div class="k">Tags</div><div class="v">${tags.length?esc(tags.join(', ')):'none'}</div>
+        <label class="fl">Niche</label><input class="f" id="x_niche" value="${esc(XT.niche)}">
+      </div></div>`;
+    go.textContent='Save idea'; go.setAttribute('onclick','saveExtract()');
+  }catch(e){
+    out.innerHTML=`<div class="err">Could not read that link: ${esc(e.message)}.<br>
+      If it says rate limit, wait a couple of seconds and press Extract again.</div>`;
+    go.textContent='Extract';
+  }
+}
+function saveExtract(){
+  if(!XT)return;
+  const nEl=document.getElementById('x_niche'), tEl=document.getElementById('x_text');
+  if(nEl)XT.niche=nEl.value.trim();
+  if(tEl)XT.text=tEl.value.trim()||XT.link;
+  DB.ideas.unshift(Object.assign({id:uid('i')},XT));
+  XT=null;closeModal();save();show('ideas');
 }
 
 function renderScripts(){
-  const withScript=DB.posts.filter(p=>p.script&&p.script.length);
+  const withScript=scoped().filter(p=>p.script&&p.script.length);
   document.getElementById('scriptRows').innerHTML=withScript.length?withScript.map(p=>{
     const a=acct(p.account),pl=PLATFORMS[a.platform];
     return `<div class="card tight" style="margin-bottom:8px">
@@ -670,7 +832,7 @@ function renderCal(){
   while(cells.length%7)cells.push({out:true});
   document.getElementById('calGrid').innerHTML=cells.map(c=>{
     if(c.out)return '<div class="cal-cell out"></div>';
-    const ps=DB.posts.filter(p=>p.date===c.key);
+    const ps=scoped().filter(p=>p.date===c.key);
     return `<div class="cal-cell${c.key===tk?' today':''}" onclick="openPost(null,'${c.key}')">
       <div class="dn">${c.d}</div>
       ${ps.map(p=>{const pl=PLATFORMS[acct(p.account).platform];
@@ -918,8 +1080,11 @@ function delIdea(id){DB.ideas=DB.ideas.filter(i=>i.id!==id);save();}
 function promote(id){
   const it=DB.ideas.find(x=>x.id===id);if(!it)return;
   DB.ideas=DB.ideas.filter(x=>x.id!==id);
-  DB.posts.push({id:uid('p'),date:todayKey(),account:DB.accounts[0].id,hook:it.text.slice(0,60),
-    niche:it.niche,status:'draft',slides:9,model:'lite',views:0,saves:0,script:[],caption:''});
+  DB.posts.push({id:uid('p'),date:todayKey(),account:FILT||DB.accounts[0].id,
+    hook:it.text.slice(0,60),niche:it.niche,status:'draft',slides:9,model:'lite',
+    views:0,saves:0,script:[],media:[],
+    // carry the source through — otherwise the post loses what it was modelled on
+    caption:it.link?('reference: '+it.link):''});
   save();show('posts');
 }
 
