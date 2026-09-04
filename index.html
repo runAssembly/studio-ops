@@ -522,9 +522,11 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
         <input type="file" id="imp" accept="application/json" style="display:none" onchange="importData(this)">
       </div>
     </div>
-    <div class="tiles" id="acctTiles"></div>
-    <div class="sect">Personas — the voice each page writes in</div>
-    <div class="rows" id="personaRows"></div>
+    <div class="card" style="padding:14px 18px"><table class="tbl">
+      <thead><tr><th>Persona</th><th></th><th>Handle</th><th>Status</th><th>Made / planned</th>
+        <th>Spend</th><th>Next out</th><th>Views</th><th>Saves</th><th></th></tr></thead>
+      <tbody id="acctRows"></tbody>
+    </table></div>
     <div class="sect">Script service</div>
     <div class="card">
       <label class="fl">Endpoint URL (leave empty and every post falls back to Copy brief)</label>
@@ -937,17 +939,91 @@ function statusBadge(s){
 }
 
 function renderAccounts(){
+  // ⛔ EMAILS LIVE IN THE BROWSER ONLY. This page is a public URL; anything baked into the seed is
+  // world readable, and a signup email is exactly what an account-recovery attempt starts from.
+  // The field is never written to the seed and never to anything published — it stays in his
+  // localStorage. Passwords are not offered at all; those belong in a password manager.
+  const rows=DB.accounts.map(a=>{
+    const pl=PLATFORMS[a.platform];
+    const ps=DB.posts.filter(p=>p.account===a.id);
+    const made=ps.reduce((s,p)=>s+(p.media||[]).length,0), plan=ps.reduce((s,p)=>s+(p.slides||0),0);
+    const spend=ps.reduce((s,p)=>s+cost(p),0);
+    const next=ps.filter(p=>p.status!=='live').sort((x,y)=>x.date.localeCompare(y.date))[0];
+    const v=ps.reduce((s,p)=>s+(p.views||0),0), sv=ps.reduce((s,p)=>s+(p.saves||0),0);
+    return `<tr style="cursor:pointer" data-account="${a.id}" onclick="openAccount('${a.id}')">
+      <td>${esc(a.person||a.label||'')}<div class="dimtxt" style="font-size:12px">${esc(a.label||'')}</div></td>
+      <td>${platIcon(a.platform)}</td>
+      <td class="num">@${esc(a.handle)}</td>
+      <td><span class="badge ${a.claimed?'live':'draft'}">${a.claimed?'claimed':'candidate'}</span></td>
+      <td class="num">${made}<span class="dimtxt">/${plan}</span></td>
+      <td class="num">${money(spend)}</td>
+      <td class="num dimtxt">${next?next.date:'—'}</td>
+      <td class="num">${v.toLocaleString()}</td>
+      <td class="num">${sv.toLocaleString()}</td>
+      <td style="text-align:right"><button class="rowbtn" onclick="event.stopPropagation();openPersona('${a.id}')">Persona</button></td>
+    </tr>`;}).join('');
+  const el=document.getElementById('acctRows'); if(el)el.innerHTML=rows;
+  renderAccountsSidebar();
+}
+function openAccount(id){
+  const a=DB.accounts.find(x=>x.id===id); if(!a)return;
+  const pl=PLATFORMS[a.platform];
+  const ps=DB.posts.filter(p=>p.account===id).sort((x,y)=>y.date.localeCompare(x.date));
+  const spend=ps.reduce((s,p)=>s+cost(p),0);
+  const v=ps.reduce((s,p)=>s+(p.views||0),0), sv=ps.reduce((s,p)=>s+(p.saves||0),0);
+  const live=ps.filter(p=>p.status==='live');
+  // ⭐ Two operational states nothing else tracks: the sound has to be swapped by hand because no
+  // API can set it, and the AI disclosure flag has to be set on generated slides.
+  const soundTodo=live.filter(p=>!p.soundDone);
+  const aigcTodo=live.filter(p=>(p.media||[]).length&&!p.aigcSet);
+  openModal(`<h3>${esc(a.person||a.label||'')} · ${esc(pl.name)}</h3>
+    <div class="mutedtxt" style="font-size:13px">@${esc(a.handle)} —
+      ${a.claimed?'claimed':'<span style="color:#f0a08f">handle not claimed yet, still a candidate</span>'}</div>
+    <dl class="pv-kv" style="grid-template-columns:auto 1fr auto 1fr">
+      <dt>Posts</dt><dd class="num">${ps.length}</dd>
+      <dt>Spend</dt><dd class="num">${money(spend)}</dd>
+      <dt>Views</dt><dd class="num">${v.toLocaleString()}</dd>
+      <dt>Saves</dt><dd class="num">${sv.toLocaleString()} ${v?`(${rate(sv,v)})`:''}</dd>
+    </dl>
+    ${live.length?'':'<div class="hint">Nothing published yet, so the engagement numbers are zeros rather than estimates. Once a post is live I can pull its real counts the same way I read a reference.</div>'}
+    <div class="sect">Identity</div>
+    <div class="fgrid">
+      <div><label class="fl">Handle</label><input class="f" id="ac_handle" value="${esc(a.handle)}"></div>
+      <div><label class="fl">Claimed?</label><select class="f" id="ac_claimed"><option value=""${a.claimed?'':' selected'}>not yet</option><option value="1"${a.claimed?' selected':''}>claimed</option></select></div>
+      <div class="full"><label class="fl">Signup email — stays in this browser, never published</label>
+        <input class="f" id="ac_email" value="${esc(a.email||'')}" placeholder="kept locally only"></div>
+    </div>
+    <div class="hint">This page is a public URL. The email is stored in your browser and is never
+      written into anything I publish. Passwords do not belong here at all — use a password manager.</div>
+    ${(soundTodo.length||aigcTodo.length)?`<div class="sect">Needs a human</div>
+      <div class="pv-cap">
+        ${soundTodo.length?`<div>${soundTodo.length} live post${soundTodo.length>1?'s':''} still need the sound swapping in the app — no API can set it.</div>`:''}
+        ${aigcTodo.length?`<div>${aigcTodo.length} live post${aigcTodo.length>1?'s':''} with generated images and no AI disclosure flag recorded.</div>`:''}
+      </div>`:''}
+    <div class="sect">Recent posts</div>
+    ${ps.length?ps.slice(0,6).map(p=>`<div class="pv-line" onclick="closeModal();openPreview('${p.id}')">
+        <i>${p.date}</i><span>${esc(p.hook)}</span>
+        <span class="dimtxt" style="margin-left:auto">${p.status}</span></div>`).join(''):'<div class="hint">No posts yet.</div>'}
+    <div class="sect">Persona</div>
+    <div class="pv-cap" style="white-space:pre-wrap;max-height:180px;overflow:auto">${esc(a.persona||'')}</div>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal()">Close</button>
+      <button class="btn" onclick="openPersona('${a.id}')">Edit persona</button>
+      <button class="btn primary" onclick="saveAccount('${a.id}')">Save</button>
+    </div>`,'wide');
+}
+function saveAccount(id){
+  const a=DB.accounts.find(x=>x.id===id); if(!a)return;
+  a.handle=document.getElementById('ac_handle').value.trim()||a.handle;
+  a.claimed=!!document.getElementById('ac_claimed').value;
+  a.email=document.getElementById('ac_email').value.trim();
+  closeModal();save();
+}
+function renderAccountsSidebar(){
   document.getElementById('acctNav').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     return `<button class="acct${FILT===a.id?' on':''}" onclick="setScope('${a.id}');show('posts')"><span class="sw" style="background:${pl.color}"></span>
       <span><span class="an">${esc(a.person||a.label||pl.name)}</span><br><span class="ah">${platIcon(a.platform)}</span></span></button>`;}).join('');
-  document.getElementById('acctTiles').innerHTML=DB.accounts.map(a=>{
-    const pl=PLATFORMS[a.platform];
-    const ps=DB.posts.filter(p=>p.account===a.id);
-    const v=ps.reduce((s,p)=>s+(p.views||0),0), sv=ps.reduce((s,p)=>s+(p.saves||0),0);
-    return `<div class="tile"><div class="lab"><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></div>
-      <div class="num">${ps.length}</div>
-      <div class="note">@${esc(a.handle)} · ${v.toLocaleString()} views · ${sv.toLocaleString()} saves</div></div>`;}).join('');
 }
 
 function renderPersonas(){
