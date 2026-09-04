@@ -223,6 +223,10 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
 .xt img{width:82px;border-radius:var(--r-badge);display:block}
 .xt .k{font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:-.015em}
 .xt .v{font-size:13px;color:var(--body);margin:2px 0 9px;line-height:1.45}
+.stylebox{background:rgba(255,255,255,.02);border-radius:var(--r-btn);padding:12px 14px;margin-top:10px}
+.stylebox .k{font-size:10.5px;text-transform:uppercase;letter-spacing:-.015em;color:var(--dim);margin-top:8px}
+.stylebox .k:first-child{margin-top:0}
+.stylebox .v{font-size:12.5px;color:var(--body);line-height:1.5;margin-top:2px}
 .err{color:#f0a08f;font-size:12.5px;margin-top:10px;line-height:1.45}
 .sect{font-size:11px;text-transform:uppercase;color:var(--dim);letter-spacing:-.015em;
   margin:28px 0 10px}
@@ -509,6 +513,16 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
    ====================================================================== */
 const PLATFORMS={tiktok:{name:'TikTok',color:'#7c72ff'},instagram:{name:'Instagram',color:'#eb5757'},pinterest:{name:'Pinterest',color:'#27a644'}};
 const RATE={lite:0.0336,pro:0.1344};   // per image, measured
+// ⭐ WHAT AN IDEA COSTS. Reading a reference and translating it are TEXT calls; the images are the
+// only part I can price, because the gemini-2.5-flash text SKU is not in the billing catalogue
+// this service account can see. So the tokens are measured and shown, and NOT converted into a
+// dollar figure I would be inventing.
+function ideaCost(i){
+  const t=(i.style&&i.style.tokens)||{};
+  const imgs=i.slides||0;
+  return {tokens:(t.extract_in||0)+(t.extract_out||0)+(t.translate_in||0)+(t.translate_out||0),
+          images:imgs, dollars:imgs*RATE.lite};
+}
 // The real slides built 3 Sep, deployed alongside this page. Relative paths so the app works
 // the same on localhost and on Pages — an absolute /media/ path 404s under a project subpath.
 const media=(slug,n)=>Array.from({length:n},(_,i)=>`media/${slug}/${slug}-${String(i+1).padStart(2,'0')}.jpg`);
@@ -681,6 +695,9 @@ width it ends up a third of the frame and reads as a screenshot.`}
   // ⭐ THE PLAYBOOK. Every entry carries its SOURCE, so a rule can be argued with rather
   // than obeyed. An unsourced rule is folklore.
   rules:[
+    {id:'r0',cat:'Writing',title:'Translate the cover promise too, never inherit it',
+     rule:"I put extremely chic content ideas on an electrician because that is what the pilates reference said. Chic belongs to a pilates studio in a pink room. The cover is the one line I had been treating as fixed, and it is the line that most obviously belongs to the other account. Translate it into the trade's own voice: content ideas that take five minutes.",
+     source:'Reza, 4 Sep, catching it on the trades plan.',added:'2026-09-04'},
     {id:'r1',cat:'Prompting',title:'Real and raw, not professional lighting',rule:'This is the core, and it transfers to everything. Not the phone selfie framing, which is only right for profile photos. What makes an image read as real is that it looks unlit and unstaged: available light, blown windows, uneven colour, someone caught mid movement.',source:'Reza, 4 Sep, correcting me for nearly applying the selfie look globally.',added:'2026-09-04'},
     {id:'r2',cat:'Prompting',title:'Digital noise, not film grain',rule:'A phone sensor makes digital and chroma noise. Film grain is a different physical artefact and reads as a filter, and I had it in every prompt. Name the lens and pipeline too: main 24mm f/1.78 or ultra wide 13mm at 0.5x, Apple ProRAW, Deep Fusion, Smart HDR. And rule the cinema look OUT: no DSLR, no studio lighting, no anamorphic flare, no cinema bokeh.',source:"EXM7777 on X, 4 Sep. A/B'd on our own photos: clearly better on cafe, a draw on trades.",added:'2026-09-04'},
     {id:'r3',cat:'Prompting',title:'Name the failures, not the polish',rule:'Ask for the flaws by name: flash blowing a hot spot, fingerprints on the mirror, one person blinking, a hand blurred mid movement, the window blown to white, crumbs and a torn receipt, framed too tight so a shoulder is cut off. None of it is beauty, it is evidence a person was there.',source:'Derived 3 Sep, proved A/B on the same slide before adopting.',added:'2026-09-03'},
@@ -700,7 +717,7 @@ width it ends up a third of the frame and reads as a screenshot.`}
     {id:'h2',text:'can we normalize this type of content',source:'reference @sherbabyyyyy',used:0,views:1494,saves:44}
   ],
   ideas:[
-    {id:'i1',text:'Pilates studio — the reference post that did 14.9k. Same format, our own generated images.',niche:'pilates'},
+    {id:'i1',text:'Pilates studio — the reference we measure everything against.',niche:'pilates',link:'https://www.tiktok.com/@sherbabyyyyy/photo/7667175942757928223',author:'@sherbabyyyyy',views:14891,saves:479,slides:11,style:{"source": "https://www.tiktok.com/@sherbabyyyyy/photo/7667175942757928223", "author": "@sherbabyyyyy", "slide_count": 11, "format_mix": {"single-photo": 6, "group": 1, "flatlay": 1, "collage": 2, "mirror-selfie": 1}, "multi_image_slides": 2, "line_words_median": 4, "text_positions": ["lower-third", "middle", "top", "upper-third"], "cover_text": "extremely chic content ideas \u2022 piates instructor / studio \u2022", "tokens": {"extract_in": 17861, "extract_out": 743, "translate_in": 1209, "translate_out": 826}, "lines": ["extremely chic content ideas \u2022 piates instructor / studio \u2022", "selfie at the reformer", "love this edit", "group pics", "feels editorial", "sipsss", "THE SCULPT ROOM love love love sleep pilates on skincare driving", "so cuteee DIMME DIMME MORE", "color mood boards PANE rhode PEPTIDE LIP TINT BAUME \u00c0 L\u00c8VRES TEINT\u00c9 AUX PEPTIDES 10 mL/0.3 fl oz e Ikigal", "faceless lifestyle shots", "i love how fun this is"]}},
     {id:'i2',text:'Dental practice — same structural logic as clinics, visual, high ticket, heavily regulated on claims.',niche:'dental'},
     {id:'i3',text:'The compliance angle as its own hook: "content ideas you are actually allowed to post".',niche:'aesthetic clinic'},
     {id:'i4',text:'Cocktail bar — reference did only 1.5k. Weak niche or weak hook, worth one test to find out which.',niche:'bar'}
@@ -1133,11 +1150,28 @@ function renderIdeas(){
            <span>save rate <b>${rate(i.saves||0,i.views||0)}</b></span>
            ${i.slides?`<span>slides <b>${i.slides}</b></span>`:''}
          </div>` : '';
+    // The extracted STYLE, which is the part that was missing. Format mix first, because
+    // "6 singles, 1 group, 1 flatlay, 2 collages" is the fact that changes what we make.
+    const st=i.style;
+    const c=ideaCost(i);
+    const style=st?`<div class="stylebox">
+        <div class="k">Style read from the reference</div>
+        <div class="v">${Object.entries(st.format_mix||{}).map(([k,v])=>`${v} ${esc(k)}`).join(' · ')}
+          ${st.multi_image_slides?` — <b>${st.multi_image_slides} of ${st.slide_count} are multi image</b>`:''}</div>
+        <div class="k">Lines</div>
+        <div class="v">median ${st.line_words_median} words · text sits at ${(st.text_positions||[]).join(', ')}</div>
+        <div class="v" style="color:var(--dim)">${(st.lines||[]).slice(1,6).map(x=>esc(x)).join(' · ')}</div>
+        <div class="k">What it costs to use</div>
+        <div class="v"><b>${money(c.dollars)}</b> for ${c.images} images on lite,
+          plus ${c.tokens.toLocaleString()} tokens to read the reference and translate it.
+          <span style="color:var(--dim)">Those tokens are measured but not priced — the text SKU
+          is not in the billing catalogue this account can see, so I am not inventing a figure.</span></div>
+      </div>`:'';
     const src=i.link
       ? `<div class="s">${esc(i.author||'')} · <a href="${esc(i.link)}" target="_blank" rel="noopener">open original</a></div>`
       : `<div class="s">${esc(i.niche||'')}</div>`;
     return `<div class="idea">${thumb}
-      <div class="bd"><div class="t">${esc(i.text)}</div>${src}${stats}</div>
+      <div class="bd"><div class="t">${esc(i.text)}</div>${src}${stats}${style}</div>
       <div class="ac">
         <button class="rowbtn" onclick="promote('${i.id}')">Make a post</button>
         <button class="rowbtn" onclick="promoteAll('${i.id}')">Send to all ${DB.accounts.length}</button>
