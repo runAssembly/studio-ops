@@ -465,7 +465,7 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
   <!-- ============================================================ ACCOUNTS -->
   <section class="view" id="v-accounts"><div class="page">
     <div class="ptop">
-      <div><h1>Accounts</h1><div class="sub">One persona, three platforms. Handles are not chosen yet.</div></div>
+      <div><h1>Accounts</h1><div class="sub">Four personas, two platforms each. Handles are CANDIDATES: TikTok and Instagram availability could not be verified from our box, so each one still has to be typed into the signup form.</div></div>
       <div class="acts">
         <button class="btn" onclick="exportData()">Export JSON</button>
         <button class="btn" onclick="document.getElementById('imp').click()">Import</button>
@@ -514,7 +514,7 @@ const SEED={
   // ⛔ Handles are left as TBD on purpose. Inventing one risks landing on a real account or a
   // real mark, which is exactly the mistake "Kestrel" was the day before.
   accounts:[
-    {id:'cl-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Clinics',persona:
+    {id:'cl-tt',platform:'tiktok',handle:'nadiadoessocial',person:'Nadia',avatar:'media/avatars/clinic.jpg',bio:'social for skin clinics · nine things a week you are allowed to post · no before and afters',followers:0,label:'Clinics',persona:
 `Who: a freelance social media manager who only works with skin clinics, aesthetics and wellness.
 Voice: lowercase, dry, talking to other people in the trade. Captions her own camera roll.
 Subject: content ideas for one clinic type per post, named on the cover.
@@ -522,33 +522,33 @@ Format: 9 to 11 slides, native 9:16, no crop. One short lowercase line per slide
 good length. Half name a literal thing to shoot, half are a reaction to the picture.
 Never: a before-and-after, a result, a claim about what a treatment does. In this vertical that
 is not a style choice, it is the regulated line. Every idea must be legal to post.`},
-    {id:'cl-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Clinics',persona:
+    {id:'cl-ig',platform:'instagram',handle:'nadiadoessocial',person:'Nadia',avatar:'media/avatars/clinic.jpg',bio:'social for skin clinics · nine things a week you are allowed to post · no before and afters',followers:0,label:'Clinics',persona:
 `Same person as the clinics TikTok, a shade more polished. Still lowercase.
 Format: 8 slides maximum, and the cover line must sit in the MIDDLE THIRD, because Instagram
 crops 9:16 down to 4:5 and beheads anything near the top. Measured on our own slides, not guessed.
 Never: put the promise in the top or bottom sixth of the cover. No before-and-afters.`},
-    {id:'tr-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Trades',persona:
+    {id:'tr-tt',platform:'tiktok',handle:'onsitewithfrankie',person:'Frankie',avatar:'media/avatars/trades.jpg',bio:'social for trades · film it between jobs · was on the tools, now I do the posting',followers:0,label:'Trades',persona:
 `Who: a social media manager for trades — electricians, plumbers, builders, roofers.
 Voice: lowercase, plain, no gloss. Sounds like someone who has been on a site at 6am.
 Subject: content a two-van outfit can actually shoot between jobs.
 Format: 9 slides, 9:16. One short line each. Work in progress, tools, vans, the crew.
 Never: promise a price, a lead volume or an income. No slur on other trades. No unsafe practice
 shown as a flex — no ladders on boxes, no working live.`},
-    {id:'tr-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Trades',persona:
+    {id:'tr-ig',platform:'instagram',handle:'onsitewithfrankie',person:'Frankie',avatar:'media/avatars/trades.jpg',bio:'social for trades · film it between jobs · was on the tools, now I do the posting',followers:0,label:'Trades',persona:
 `Same person as the trades TikTok. Slightly tidier, still not corporate.
 Format: 8 slides, cover line in the middle third for the 4:5 crop.
 Never: a price promise, an unsafe shot, or a dig at another trade.`},
-    {id:'fd-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Cafe and food',persona:
+    {id:'fd-tt',platform:'tiktok',handle:'romybeforeopen',person:'Romy',avatar:'media/avatars/cafe.jpg',bio:'social for cafes · the hour before you open is the whole content plan',followers:0,label:'Cafe and food',persona:
 `Who: a social media manager for cafes, bakeries and small food places.
 Voice: lowercase, warm, unhurried. Notices light and steam and hands.
 Subject: the hour before opening and the hour after closing, which is when the good shots are.
 Format: 9 slides, 9:16. One short line each. Product, process, people, room.
 Never: a health claim, a nutrition claim, or anything about allergens. Never invent a dish, a
 price or an opening time — those change and a wrong one costs the client a customer.`},
-    {id:'fd-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Cafe and food',persona:
+    {id:'fd-ig',platform:'instagram',handle:'romybeforeopen',person:'Romy',avatar:'media/avatars/cafe.jpg',bio:'social for cafes · the hour before you open is the whole content plan',followers:0,label:'Cafe and food',persona:
 `Same person as the food TikTok. Format: 8 slides, cover line in the middle third for the 4:5
 crop. Never a health or allergen claim, never an invented price or opening time.`},
-    {id:'su-tt',platform:'tiktok',handle:'handle TBD',followers:0,label:'Suara',persona:
+    {id:'su-tt',platform:'tiktok',handle:'suara.studio',person:'Suara',avatar:'',bio:'five industries, one system · the work, not the pitch',followers:0,label:'Suara',persona:
 `Who: Suara's own page. This one is not a niche persona, it is the portfolio.
 Voice: quiet and confident. The work carries it, the words just point.
 Subject: real work we have already made. Cover is always "how i would design for" plus an
@@ -557,7 +557,7 @@ Format: a cover in the first sheet's own field colour, then one slide per indust
 are COMPOSITED FROM REAL ASSETS, never regenerated — regenerating would change the work.
 Never: show a client's logo we do not have the right to, and never present a spec piece as a
 paid engagement.`},
-    {id:'su-ig',platform:'instagram',handle:'handle TBD',followers:0,label:'Suara',persona:
+    {id:'su-ig',platform:'instagram',handle:'suara.studio',person:'Suara',avatar:'',bio:'five industries, one system · the work, not the pitch',followers:0,label:'Suara',persona:
 `Same as the Suara TikTok. Format: the cover line sits in the middle third for the 4:5 crop, and
 a landscape sheet must be cover-cropped to the hero card rather than letterboxed — fitted to
 width it ends up a third of the frame and reads as a screenshot.`}
@@ -603,7 +603,71 @@ width it ends up a third of the frame and reads as a screenshot.`}
     {id:'p-su-ig',date:'2026-09-07',account:'su-ig',hook:'how i would design for',niche:'five different industries',
      status:'draft',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
      media:MEDIA_SUARA,script:['how i would design for / • five different industries •','a skincare brand','a cold pressed juice brand','an accountancy firm','an electrical contractor','an architectural glazier'],
-     caption:'Cross post. The sheets are cover-cropped to the hero card, not letterboxed.'}
+     caption:'Cross post. The sheets are cover-cropped to the hero card, not letterboxed.'},
+    // ⭐ THE NEXT FIVE PER ACCOUNT, planned Mon/Wed/Fri. status 'idea' and generated 0,
+    // so they cost nothing until the words are written and the pictures made.
+    // ⚠️ These are CAROUSELS, the format we have actually measured. Reza asked for
+    // 'videos'; video is a different production cost and is NOT what is planned here.
+    {id:'pl-cl1',date:'2026-09-07',account:'cl-tt',hook:'the questions your consult form should ask',niche:'aesthetic clinic',
+     status:'idea',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-cl2',date:'2026-09-09',account:'cl-tt',hook:'what your treatment room says before you do',niche:'aesthetic clinic',
+     status:'idea',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-cl3',date:'2026-09-11',account:'cl-tt',hook:'how to film a treatment without showing a face',niche:'aesthetic clinic',
+     status:'idea',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-cl4',date:'2026-09-14',account:'cl-tt',hook:'the three photos every clinic is missing',niche:'aesthetic clinic',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-cl5',date:'2026-09-16',account:'cl-tt',hook:'captions you can write once and use all year',niche:'aesthetic clinic',
+     status:'idea',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-tr1',date:'2026-09-07',account:'tr-tt',hook:'what to film on a first fix',niche:'electricians',
+     status:'idea',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-tr2',date:'2026-09-09',account:'tr-tt',hook:'your van is the best content you own',niche:'electricians',
+     status:'idea',slides:7,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-tr3',date:'2026-09-11',account:'tr-tt',hook:'the five photos that win a domestic job',niche:'electricians',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-tr4',date:'2026-09-14',account:'tr-tt',hook:'how to film a job you are not allowed to show',niche:'electricians',
+     status:'idea',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-tr5',date:'2026-09-16',account:'tr-tt',hook:'the end of day shot nobody takes',niche:'electricians',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-fd1',date:'2026-09-07',account:'fd-tt',hook:'the hour before you open, filmed',niche:'cafe',
+     status:'idea',slides:9,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-fd2',date:'2026-09-09',account:'fd-tt',hook:'your menu board is a content calendar',niche:'cafe',
+     status:'idea',slides:7,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-fd3',date:'2026-09-11',account:'fd-tt',hook:'how to shoot a drink without a lightbox',niche:'cafe',
+     status:'idea',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-fd4',date:'2026-09-14',account:'fd-tt',hook:'the regulars post, done respectfully',niche:'cafe',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-fd5',date:'2026-09-16',account:'fd-tt',hook:'what to post on a dead tuesday',niche:'cafe',
+     status:'idea',slides:8,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-su1',date:'2026-09-07',account:'su-tt',hook:'how i would design for a dental practice',niche:'five different industries',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-su2',date:'2026-09-09',account:'su-tt',hook:'how i would design for a gym',niche:'five different industries',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-su3',date:'2026-09-11',account:'su-tt',hook:'one brand, three price points',niche:'five different industries',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-su4',date:'2026-09-14',account:'su-tt',hook:'the same shop, five ways',niche:'five different industries',
+     status:'idea',slides:6,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
+    {id:'pl-su5',date:'2026-09-16',account:'su-tt',hook:'what a logo actually costs',niche:'five different industries',
+     status:'idea',slides:5,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
+     media:[],script:[],caption:''},
   ],
   hooks:[
     {id:'h1',text:'extremely chic content ideas',source:'reference @sherbabyyyyy',used:1,views:14891,saves:479},
@@ -618,7 +682,7 @@ width it ends up a third of the frame and reads as a screenshot.`}
 };
 
 /* ------------------------------------------------------------------ store */
-const KEY='studio.v3';   // v2 carried the templated lines and the old clinic images
+const KEY='studio.v4';   // v2 carried the templated lines and the old clinic images
 let DB=load();
 function load(){
   try{const r=localStorage.getItem(KEY);if(r)return migrate(JSON.parse(r));}catch(e){}
@@ -767,23 +831,26 @@ function renderAccounts(){
   document.getElementById('acctNav').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     return `<button class="acct${FILT===a.id?' on':''}" onclick="setScope('${a.id}');show('posts')"><span class="sw" style="background:${pl.color}"></span>
-      <span><span class="an">${esc(a.label||pl.name)}</span><br><span class="ah">${pl.name.toLowerCase()}</span></span></button>`;}).join('');
+      <span><span class="an">${esc(a.person||a.label||pl.name)}</span><br><span class="ah">${pl.name.toLowerCase()}</span></span></button>`;}).join('');
   document.getElementById('acctTiles').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     const ps=DB.posts.filter(p=>p.account===a.id);
     const v=ps.reduce((s,p)=>s+(p.views||0),0), sv=ps.reduce((s,p)=>s+(p.saves||0),0);
     return `<div class="tile"><div class="lab"><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></div>
       <div class="num">${ps.length}</div>
-      <div class="note">${esc(a.handle)} · ${v.toLocaleString()} views · ${sv.toLocaleString()} saves</div></div>`;}).join('');
+      <div class="note">@${esc(a.handle)} · ${v.toLocaleString()} views · ${sv.toLocaleString()} saves</div></div>`;}).join('');
 }
 
 function renderPersonas(){
   document.getElementById('personaRows').innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     const txt=(a.persona||'').trim();
-    return `<div class="idea">
+    const face=a.avatar?`<img class="th" style="width:64px;height:64px;border-radius:50%" src="${esc(a.avatar)}" alt="" onerror="this.style.display='none'">`:'';
+    return `<div class="idea">${face}
       <div class="bd">
-        <div class="t"><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span></div>
+        <div class="t"><span class="badge"><span class="d" style="background:${pl.color}"></span>${esc(aname(a))}</span>
+          <span class="mutedtxt" style="font-size:12.5px">&nbsp; @${esc(a.handle)}</span></div>
+        ${a.bio?`<div class="s" style="color:var(--body)">${esc(a.bio)}</div>`:''}
         <div class="s" style="white-space:pre-wrap;margin-top:8px;color:var(--muted)">${esc(txt)||'No persona yet.'}</div>
       </div>
       <div class="ac"><button class="rowbtn" onclick="openPersona('${a.id}')">Edit</button></div>
@@ -800,7 +867,10 @@ function saveSvc(v){DB.settings=DB.settings||{};DB.settings.scriptService=v.trim
 function openPersona(id){
   const a=DB.accounts.find(x=>x.id===id);if(!a)return;
   openModal(`<h3>${esc(aname(a))} persona</h3>
-    <label class="fl">Handle</label><input class="f" id="pa_handle" value="${esc(a.handle)}">
+    <label class="fl">Handle (candidate — still needs checking in the app)</label>
+    <input class="f" id="pa_handle" value="${esc(a.handle)}">
+    <div style="height:14px"></div>
+    <label class="fl">Bio</label><input class="f" id="pa_bio" value="${esc(a.bio||'')}">
     <div style="height:14px"></div>
     <label class="fl">Persona — voice, subject, format, and what it never does</label>
     <textarea class="f" id="pa_text" rows="12">${esc(a.persona||'')}</textarea>
@@ -814,6 +884,7 @@ function openPersona(id){
 function savePersona(id){
   const a=DB.accounts.find(x=>x.id===id);if(!a)return;
   a.handle=document.getElementById('pa_handle').value.trim()||a.handle;
+  const b=document.getElementById('pa_bio'); if(b)a.bio=b.value.trim();
   a.persona=document.getElementById('pa_text').value;
   closeModal();save();
 }
@@ -1177,7 +1248,8 @@ function pvRender(){
   const a=acct(p.account), media=p.media||[], n=media.length;
   const src=n?media[Math.min(PV.i,n-1)]:null;
   const handle=atname(a.handle);
-  const initial=(a.handle||'S').trim()[0].toUpperCase();
+  const initial=(a.person||a.handle||'S').trim()[0].toUpperCase();
+  const face=a.avatar?`<img src="${esc(a.avatar)}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`:initial;
   const dots=Array.from({length:n},(_,i)=>`<i class="${i===PV.i?'on':''}"></i>`).join('');
   const counter=n?`${PV.i+1}/${n}`:'no slides';
 
@@ -1192,7 +1264,7 @@ function pvRender(){
       <div class="top"><span>Following</span><b>For You</b></div>
       <div class="cnt">${counter}</div>
       <div class="rail">
-        <div class="av">${initial}<span class="plus">+</span></div>
+        <div class="av">${face}<span class="plus">+</span></div>
         <div class="it">${ICON.heart}<span>${nfmt(p.likes)}</span></div>
         <div class="it">${ICON.chat}<span>${nfmt(p.comments)}</span></div>
         <div class="it">${ICON.mark}<span>${nfmt(p.saves)}</span></div>
@@ -1206,7 +1278,7 @@ function pvRender(){
       </div></div></div>`;
   } else if(PV.plat==='instagram'){
     frame=`<div class="dev"><div class="ig">
-      <div class="hd"><span class="ring"><span>${initial}</span></span>
+      <div class="hd"><span class="ring"><span>${face}</span></span>
         <span><div class="nm">${esc(handle)}</div><div class="sub">${esc(p.niche||'')}</div></span>
         <span class="more">•••</span></div>
       <div class="frame"><img src="${src}" alt=""><div class="cnt">${counter}</div></div>
@@ -1225,7 +1297,7 @@ function pvRender(){
       <div class="below">
         <div class="ttl">${esc(p.hook)}</div>
         <div class="ds">${esc(p.caption||'')}</div>
-        <div class="who"><span class="av">${initial}</span><span class="nm">${esc(handle)}</span></div>
+        <div class="who"><span class="av">${face}</span><span class="nm">${esc(handle)}</span></div>
       </div></div></div>`;
   }
 
