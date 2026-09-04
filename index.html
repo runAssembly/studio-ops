@@ -1147,7 +1147,10 @@ function renderDaily(){
       DAILY.failures&&DAILY.failures.length?`, ${DAILY.failures.length} could not be fetched`:''}.
       This ranks a watchlist by how fast each post is gaining saves. It is not a search of TikTok:
       open search, profile listing and the RSS bridges are all blocked from our box, so a post only
-      enters the list when someone drops its link in.</div>
+      enters the list when someone drops its link in.
+      ${DAILY.watchlist_size<8?`<br><br><b>With only ${DAILY.watchlist_size} posts watched the winner
+      will rarely move.</b> That is the list being small, not the ranking being broken — use Track it
+      on any idea below to add one.`:''}</div>
   </div>`;
 }
 function dailyIdea(){
@@ -1231,6 +1234,11 @@ function pickPersona(ix,id){
   const names=Object.keys((d&&d.plans)||{});
   PV_PERSONA=names[ix]||null;
   openIdeaDetail(id);
+}
+function trackIt(id){
+  const i=DB.ideas.find(x=>x.id===id); if(!i||!i.link)return;
+  window.open(TG+encodeURIComponent(i.link)+'&text='+encodeURIComponent('track this daily'),'_blank','noopener');
+  warn('Telegram is open with the link — hit send and it joins the daily watchlist.');
 }
 function whyWaiting(id){
   const i=DB.ideas.find(x=>x.id===id); if(!i)return;
@@ -1359,6 +1367,7 @@ function renderIdeas(){
         <button class="rowbtn" onclick="event.stopPropagation();promote('${i.id}')">Make a post</button>
         <button class="rowbtn" onclick="event.stopPropagation();promoteAll('${i.id}')">Send to all ${DB.accounts.length}</button>
         ${state==='none'&&i.link?`<button class="rowbtn" onclick="event.stopPropagation();askAnalyse('${i.id}')">Analyse slides</button>`:''}
+        ${i.link?`<button class="rowbtn" onclick="event.stopPropagation();trackIt('${i.id}')" title="Add to the daily watchlist">Track it</button>`:''}
         ${state==='waiting'?`<button class="rowbtn" style="color:var(--lime)" onclick="event.stopPropagation();whyWaiting('${i.id}')">analysing…</button>`:''}
         <button class="rowbtn" onclick="event.stopPropagation();delIdea('${i.id}')">Delete</button>
       </div></div>`;}).join(''):'<div class="empty">No ideas yet.</div>';
