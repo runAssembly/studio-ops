@@ -532,9 +532,11 @@ const RATE={lite:0.0336,pro:0.1344};   // per image, measured
 // this service account can see. So the tokens are measured and shown, and NOT converted into a
 // dollar figure I would be inventing.
 function ideaCost(i){
-  const t=(i.style&&i.style.tokens)||{};
+  const st=(typeof styleFor==='function'&&styleFor(i))||i.style;
+  const t=(st&&st.tokens)||{};
   const imgs=i.slides||0;
-  return {tokens:(t.extract_in||0)+(t.extract_out||0)+(t.translate_in||0)+(t.translate_out||0),
+  return {tokens:(t.extract_in||0)+(t.extract_out||0)+(t.translate_in||0)+(t.translate_out||0)
+                 +(t.translate_all_personas||0),
           images:imgs, dollars:imgs*RATE.lite};
 }
 // The real slides built 3 Sep, deployed alongside this page. Relative paths so the app works
@@ -1071,6 +1073,12 @@ function renderDaily(){
   const w=DAILY.winner;
   const vel=w.saves_per_day===null?'not measured yet':`${w.saves_per_day}/day`;
   const when=(DAILY.generated||'').replace('T',' ').replace('+00:00',' UTC');
+  let age='';
+  try{
+    const hrs=(Date.now()-new Date(DAILY.generated).getTime())/3.6e6;
+    age = hrs<26 ? `<span style="color:var(--muted)">${Math.round(hrs)}h ago</span>`
+                 : `<span style="color:#f0a08f">STALE — ${Math.round(hrs/24)} days old, the daily scan has not run</span>`;
+  }catch(e){}
   el.innerHTML=`<div class="daily">
     <div class="cap">Hook of the day · ranked on ${esc(DAILY.basis)}</div>
     <div class="hk">${esc(w.hook)}</div>
@@ -1086,7 +1094,7 @@ function renderDaily(){
       <button class="btn primary" onclick="dailyToAll()">Send to all ${DB.accounts.length} accounts</button>
       <button class="btn" onclick="dailyToBacklog()">Just add to backlog</button>
     </div>
-    <div class="why">Scanned ${esc(when)} across ${DAILY.watchlist_size} watched posts${
+    <div class="why">Scanned ${esc(when)} · ${age} · across ${DAILY.watchlist_size} watched posts${
       DAILY.failures&&DAILY.failures.length?`, ${DAILY.failures.length} could not be fetched`:''}.
       This ranks a watchlist by how fast each post is gaining saves. It is not a search of TikTok:
       open search, profile listing and the RSS bridges are all blocked from our box, so a post only
