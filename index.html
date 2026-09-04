@@ -783,7 +783,7 @@ function migrate(db){
     const p=db.posts.find(x=>x.id===s.id);
     if(p&&!(p.media&&p.media.length)&&s.media)p.media=s.media.slice();
   }
-  if(!db.settings)db.settings={scriptService:''};
+  if(!db.settings)db.settings={scriptService:'',dailyDone:''};
   if(!db.rules)db.rules=JSON.parse(JSON.stringify(SEED.rules));
   // Personas were added after people already had a stored copy. Backfill from the seed only
   // where the account has none — never overwrite one that has been edited.
@@ -1204,6 +1204,17 @@ async function loadDaily(){
   }catch(e){ DAILY={error:e.message}; }
   renderDaily();
 }
+const dailyKey=()=>{
+  if(!DAILY||!DAILY.winner)return null;
+  return (DAILY.generated||'').slice(0,10)+'|'+DAILY.winner.url;
+};
+function clearDaily(){
+  const k=dailyKey(); if(!k)return;
+  DB.settings=DB.settings||{}; DB.settings.dailyDone=k; save();
+}
+function undoDaily(){
+  DB.settings=DB.settings||{}; DB.settings.dailyDone=''; save();
+}
 function renderDaily(){
   const el=document.getElementById('dailyBox'); if(!el)return;
   if(!DAILY){el.innerHTML='';return;}
@@ -1211,6 +1222,16 @@ function renderDaily(){
     el.innerHTML=`<div class="daily"><div class="cap">Hook of the day</div>
       <div class="why">No scan available: ${esc(DAILY.error||DAILY.basis||'nothing fetched')}.
         Run <span class="num">tools/hook_scan.py</span> and republish.</div></div>`;
+    return;
+  }
+  // handled today ⇒ collapse to one quiet line rather than sit there demanding attention
+  if(DB.settings&&DB.settings.dailyDone===dailyKey()){
+    el.innerHTML=`<div class="daily" style="background:none;box-shadow:rgb(35,37,42) 0 0 0 1px inset">
+      <div class="cap" style="color:var(--dim)">Hook of the day · handled</div>
+      <div class="why" style="margin-top:6px">Done for today. The next one appears when tomorrow's
+        scan finds a different answer.
+        <button class="rowbtn" onclick="undoDaily()" style="margin-left:8px">Bring it back</button></div>
+    </div>`;
     return;
   }
   const w=DAILY.winner;
@@ -1239,6 +1260,7 @@ function renderDaily(){
     <div class="acts">
       <button class="btn primary" onclick="dailyToAll()">Send to all ${DB.accounts.length} accounts</button>
       <button class="btn" onclick="dailyToBacklog()">Just add to backlog</button>
+      <button class="btn" onclick="clearDaily()">Not this one</button>
     </div>
     ${DAILY.rate_leader?`<div class="why" style="border-top:1px solid rgba(228,242,34,.18);margin-top:14px;padding-top:12px">
       <b style="color:var(--body)">Highest save rate on the list:</b> ${esc(DAILY.rate_leader.hook)}
@@ -1265,12 +1287,12 @@ function dailyIdea(){
 function dailyToBacklog(){
   const it=dailyIdea(); if(!it)return;
   if(DB.ideas.some(x=>x.link===it.link)){warn('That one is already in the backlog.');return;}
-  DB.ideas.unshift(it); save(); show('ideas');
+  DB.ideas.unshift(it); clearDaily(); save(); show('ideas');
 }
 function dailyToAll(){
   const it=dailyIdea(); if(!it)return;
   DB.accounts.forEach(a=>DB.posts.push(draftFrom(it,a.id)));
-  save(); show('posts');
+  clearDaily(); save(); show('posts');
 }
 
 
