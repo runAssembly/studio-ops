@@ -899,7 +899,7 @@ function renderScope(){
 }
 
 /* ---------------------------------------------------------------- renders */
-function renderAll(){renderDaily();renderRules();renderScope();renderTiles();renderUpcoming();renderAccounts();renderPersonas();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
+function renderAll(){renderDaily();renderRules();renderScope();renderTiles();renderUpcoming();renderAccounts();renderSvcState();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
 
 function renderTiles(){
   const month=scoped().filter(p=>p.date.slice(0,7)===monthKey());
@@ -1019,15 +1019,26 @@ function saveAccount(id){
   a.email=document.getElementById('ac_email').value.trim();
   closeModal();save();
 }
+function renderSvcState(){
+  const u=(DB.settings&&DB.settings.scriptService)||'';
+  const el=document.getElementById('svcUrl'); if(el&&el.value!==u)el.value=u;
+  const st=document.getElementById('svcState'); if(!st)return;
+  st.textContent=u
+    ? 'Set. "Write the script" calls it directly.'
+    : 'Not set — the service is not deployed yet (five routes tried, all blocked; it needs a GCP '
+      +'grant from Jon). Until then every post offers Copy brief instead.';
+}
 function renderAccountsSidebar(){
-  document.getElementById('acctNav').innerHTML=DB.accounts.map(a=>{
+  const _el=document.getElementById('acctNav'); if(!_el)return;   // a removed container must not take the app down
+  _el.innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     return `<button class="acct${FILT===a.id?' on':''}" onclick="setScope('${a.id}');show('posts')"><span class="sw" style="background:${pl.color}"></span>
       <span><span class="an">${esc(a.person||a.label||pl.name)}</span><br><span class="ah">${platIcon(a.platform)}</span></span></button>`;}).join('');
 }
 
 function renderPersonas(){
-  document.getElementById('personaRows').innerHTML=DB.accounts.map(a=>{
+  const _el=document.getElementById('personaRows'); if(!_el)return;   // a removed container must not take the app down
+  _el.innerHTML=DB.accounts.map(a=>{
     const pl=PLATFORMS[a.platform];
     const txt=(a.persona||'').trim();
     const face=a.avatar?`<img class="th" style="width:64px;height:64px;border-radius:50%" src="${esc(a.avatar)}" alt="" onerror="this.style.display='none'">`:'';
@@ -1402,7 +1413,8 @@ function openIdeaDetail(id){
     <div class="mfoot"><button class="btn" onclick="closeModal()">Close</button></div>`,'wide');
 }
 function renderIdeas(){
-  document.getElementById('ideaRows').innerHTML=DB.ideas.length?DB.ideas.map(i=>{
+  const _el=document.getElementById('ideaRows'); if(!_el)return;   // a removed container must not take the app down
+  _el.innerHTML=DB.ideas.length?DB.ideas.map(i=>{
     // ⛔ onerror, not a bare <img>. These thumbnails are signed CDN URLs that expire in about
     // two weeks; without this the row would show a grey rectangle and look like our bug.
     const thumb=i.cover
