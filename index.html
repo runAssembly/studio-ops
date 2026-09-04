@@ -462,6 +462,15 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
     <div class="rows" id="scriptRows"></div>
   </div></section>
 
+
+  <!-- ============================================================ PLAYBOOK -->
+  <section class="view" id="v-playbook"><div class="page">
+    <div class="ptop">
+      <div><h1>Playbook</h1><div class="sub">Everything we have learned that changes how the work is made. Each one says where it came from, so a rule can be argued with instead of obeyed.</div></div>
+      <div class="acts"><button class="btn primary" onclick="openRule()">Add a rule</button></div>
+    </div>
+    <div class="rows" id="ruleRows"></div>
+  </div></section>
   <!-- ============================================================ ACCOUNTS -->
   <section class="view" id="v-accounts"><div class="page">
     <div class="ptop">
@@ -669,6 +678,23 @@ width it ends up a third of the frame and reads as a screenshot.`}
      status:'idea',slides:5,generated:0,model:'lite',views:0,saves:0,likes:0,comments:0,
      media:[],script:[],caption:''},
   ],
+  // ⭐ THE PLAYBOOK. Every entry carries its SOURCE, so a rule can be argued with rather
+  // than obeyed. An unsourced rule is folklore.
+  rules:[
+    {id:'r1',cat:'Prompting',title:'Real and raw, not professional lighting',rule:'This is the core, and it transfers to everything. Not the phone selfie framing, which is only right for profile photos. What makes an image read as real is that it looks unlit and unstaged: available light, blown windows, uneven colour, someone caught mid movement.',source:'Reza, 4 Sep, correcting me for nearly applying the selfie look globally.',added:'2026-09-04'},
+    {id:'r2',cat:'Prompting',title:'Digital noise, not film grain',rule:'A phone sensor makes digital and chroma noise. Film grain is a different physical artefact and reads as a filter, and I had it in every prompt. Name the lens and pipeline too: main 24mm f/1.78 or ultra wide 13mm at 0.5x, Apple ProRAW, Deep Fusion, Smart HDR. And rule the cinema look OUT: no DSLR, no studio lighting, no anamorphic flare, no cinema bokeh.',source:"EXM7777 on X, 4 Sep. A/B'd on our own photos: clearly better on cafe, a draw on trades.",added:'2026-09-04'},
+    {id:'r3',cat:'Prompting',title:'Name the failures, not the polish',rule:'Ask for the flaws by name: flash blowing a hot spot, fingerprints on the mirror, one person blinking, a hand blurred mid movement, the window blown to white, crumbs and a torn receipt, framed too tight so a shoulder is cut off. None of it is beauty, it is evidence a person was there.',source:'Derived 3 Sep, proved A/B on the same slide before adopting.',added:'2026-09-03'},
+    {id:'r4',cat:'Prompting',title:'Name a place and a time, never an adjective',rule:'A Lisbon pharmacy counter in 1890 beats premium every time. An adjective returns the average of everything; a place and a time returns one thing.',source:'3 Sep, across the whole design portfolio day.',added:'2026-09-03'},
+    {id:'r5',cat:'Prompting',title:'The register has to match the account',rule:'Documentary grime is right for trades and cafe, wrong for a clinic selling composure. Calibrate per persona. Applying one look globally is how the clinic shelf came back as grubby mason jars and had to be reshot.',source:'4 Sep, the overshoot.',added:'2026-09-04'},
+    {id:'r6',cat:'Writing',title:'A line that fits two niches is a template',rule:'Three of nine lines were identical across clinics, trades and cafe. The reference worked because its lines could only be pilates. Test: could this sentence appear verbatim in another vertical? If yes it is filler.',source:'Reza, 3 Sep. Now enforced by a test that fails on any cross-niche duplicate.',added:'2026-09-03'},
+    {id:'r7',cat:'Writing',title:'The persona sets the voice, never the claim',rule:'House rules sit under the persona and win on conflict. No promised result, no invented statistic, no before and after. A persona may say how something sounds; it may not license a regulated claim.',source:'3 Sep, built into the script service prompt.',added:'2026-09-03'},
+    {id:'r8',cat:'Format',title:'Instagram crops 9:16 to 4:5',rule:'The cover line must sit in the middle third or Instagram beheads it. Measured on our own slides in the preview, not guessed.',source:'3 Sep, found by the platform preview on its first render.',added:'2026-09-03'},
+    {id:'r9',cat:'Format',title:'Pinterest treats every image as its own pin',rule:'A carousel has to be split. Every line must stand alone with no memory of the slide before it, and lead with the noun someone would type into search.',source:'3 Sep.',added:'2026-09-03'},
+    {id:'r10',cat:'Measurement',title:'Saves are the buying signal, not views',rule:'Someone saving content ideas for X is telling you they need a content person. The reference held about 3 percent saves at reach that differed tenfold. Rank on saves gained per DAY, not lifetime totals, or old winners rank forever.',source:'Measured off @sherbabyyyyy, 3 Sep.',added:'2026-09-03'},
+    {id:'r11',cat:'Publishing',title:'You cannot choose the sound through any API',rule:"TikTok's photo post has no music field, only auto_add_music which lets TikTok pick. song_clip_id is video only. Instagram cannot select trending audio either and a feed carousel has no sound at all. The sound is a manual in app step, about 20 seconds a post.",source:"Read off TikTok's own photo post reference, 3 Sep.",added:'2026-09-03'},
+    {id:'r12',cat:'Publishing',title:'Our slides are generated, so is_aigc must be set',rule:"TikTok's photo post carries an is_aigc flag. The images are generated so it is set true. Same principle as refusing before and afters: we do not skip a disclosure because it costs reach.",source:'3 Sep.',added:'2026-09-03'},
+    {id:'r13',cat:'Cost',title:'Cost counts images generated, never slides planned',rule:'A post costs nothing until the pictures exist, and a carousel cross posted carries zero because the images were only made once. Measured: 1,120 output tokens per image, so 3.36 cents on lite and 13.44 on pro.',source:'The dashboard read 91 cents when real spend was 30. Found 3 Sep.',added:'2026-09-03'}
+  ],
   hooks:[
     {id:'h1',text:'extremely chic content ideas',source:'reference @sherbabyyyyy',used:1,views:14891,saves:479},
     {id:'h2',text:'can we normalize this type of content',source:'reference @sherbabyyyyy',used:0,views:1494,saves:44}
@@ -699,6 +725,7 @@ function migrate(db){
     if(p&&!(p.media&&p.media.length)&&s.media)p.media=s.media.slice();
   }
   if(!db.settings)db.settings={scriptService:''};
+  if(!db.rules)db.rules=JSON.parse(JSON.stringify(SEED.rules));
   // Personas were added after people already had a stored copy. Backfill from the seed only
   // where the account has none — never overwrite one that has been edited.
   for(const a of SEED.accounts){
@@ -746,7 +773,7 @@ const money=n=>'$'+n.toFixed(2);
 const rate=(s,v)=>v>0?(s/v*100).toFixed(1)+'%':'—';
 
 /* -------------------------------------------------------------- structure */
-const VIEWS=[['overview','Overview'],['calendar','Calendar'],['posts','Posts'],['hooks','Hooks'],['ideas','Ideas'],['scripts','Scripts'],['accounts','Accounts']];
+const VIEWS=[['overview','Overview'],['calendar','Calendar'],['posts','Posts'],['hooks','Hooks'],['ideas','Ideas'],['scripts','Scripts'],['playbook','Playbook'],['accounts','Accounts']];
 function buildNav(){
   document.getElementById('nav').innerHTML=VIEWS.map((v,i)=>
     `<button class="nav-item${i===0?' active':''}" data-v="${v[0]}" onclick="show('${v[0]}')">${v[1]}<span class="k">${i+1}</span></button>`).join('');
@@ -788,7 +815,7 @@ function renderScope(){
 }
 
 /* ---------------------------------------------------------------- renders */
-function renderAll(){renderDaily();renderScope();renderTiles();renderUpcoming();renderAccounts();renderPersonas();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
+function renderAll(){renderDaily();renderRules();renderScope();renderTiles();renderUpcoming();renderAccounts();renderPersonas();renderPosts();renderHooks();renderIdeas();renderScripts();renderCal();}
 
 function renderTiles(){
   const month=scoped().filter(p=>p.date.slice(0,7)===monthKey());
@@ -1039,6 +1066,58 @@ function dailyToAll(){
   DB.accounts.forEach(a=>DB.posts.push(draftFrom(it,a.id)));
   save(); show('posts');
 }
+
+
+/* ------------------------------------------------------------- playbook
+   The rules we have actually learned, each with its source. A rule you cannot
+   trace is folklore, and folklore is how a one-off preference becomes a law. */
+function renderRules(){
+  const el=document.getElementById('ruleRows'); if(!el)return;
+  const rules=DB.rules||[];
+  if(!rules.length){el.innerHTML='<div class="empty">Nothing in the playbook yet.</div>';return;}
+  const cats=[...new Set(rules.map(r=>r.cat))];
+  el.innerHTML=cats.map(c=>`
+    <div class="sect" style="margin-top:18px">${esc(c)}</div>
+    ${rules.filter(r=>r.cat===c).map(r=>`
+      <div class="idea">
+        <div class="bd">
+          <div class="t">${esc(r.title)}</div>
+          <div class="s" style="color:var(--body);margin-top:6px;line-height:1.5">${esc(r.rule)}</div>
+          <div class="st"><span>${esc(r.source||'no source recorded')}</span><span class="dimtxt">${esc(r.added||'')}</span></div>
+        </div>
+        <div class="ac">
+          <button class="rowbtn" onclick="openRule('${r.id}')">Edit</button>
+          <button class="rowbtn" onclick="delRule('${r.id}')">Delete</button>
+        </div>
+      </div>`).join('')}`).join('');
+}
+function openRule(id){
+  const r=(DB.rules||[]).find(x=>x.id===id)||{id:null,cat:'Prompting',title:'',rule:'',source:'',added:todayKey()};
+  openModal(`<h3>${id?'Edit rule':'Add a rule'}</h3>
+    <div class="fgrid">
+      <div><label class="fl">Category</label><input class="f" id="ru_cat" value="${esc(r.cat)}"></div>
+      <div><label class="fl">Added</label><input class="f" id="ru_added" value="${esc(r.added||todayKey())}"></div>
+      <div class="full"><label class="fl">Title</label><input class="f" id="ru_title" value="${esc(r.title)}"></div>
+      <div class="full"><label class="fl">The rule</label><textarea class="f" id="ru_rule" rows="4">${esc(r.rule)}</textarea></div>
+      <div class="full"><label class="fl">Where it came from</label><input class="f" id="ru_source" value="${esc(r.source||'')}"></div>
+    </div>
+    <div class="hint">A rule without a source cannot be argued with later, only obeyed. Say where it came from and whether it was measured or asserted.</div>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="saveRule('${id||''}')">Save</button>
+    </div>`);
+}
+function saveRule(id){
+  const g=x=>document.getElementById('ru_'+x).value.trim();
+  if(!g('title')){alert('A rule needs a title.');return;}
+  const rec={id:id||uid('r'),cat:g('cat')||'General',title:g('title'),rule:g('rule'),
+             source:g('source'),added:g('added')||todayKey()};
+  DB.rules=DB.rules||[];
+  const i=DB.rules.findIndex(r=>r.id===id);
+  if(i>=0)DB.rules[i]=rec;else DB.rules.push(rec);
+  closeModal();save();show('playbook');
+}
+function delRule(id){DB.rules=(DB.rules||[]).filter(r=>r.id!==id);save();}
 
 function renderIdeas(){
   document.getElementById('ideaRows').innerHTML=DB.ideas.length?DB.ideas.map(i=>{
