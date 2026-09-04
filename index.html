@@ -759,6 +759,7 @@ width it ends up a third of the frame and reads as a screenshot.`}
 };
 
 /* ------------------------------------------------------------------ store */
+const TG='https://t.me/share/url?url=';
 const KEY='studio.v4';   // v2 carried the templated lines and the old clinic images
 let DB=load();
 function load(){
@@ -1238,20 +1239,23 @@ function whyWaiting(id){
     <div class="mfoot">
       <button class="btn" onclick="closeModal()">Close</button>
       <button class="btn" onclick="DB.ideas.find(x=>x.id==='${i.id}').analysing=false;save();closeModal()">Cancel it</button>
-      <button class="btn primary" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('wq').textContent);this.textContent='Copied'">Copy the link</button>
+      <button class="btn" onclick="navigator.clipboard&&navigator.clipboard.writeText(document.getElementById('wq').textContent);this.textContent='Copied'">Copy</button>
+      <button class="btn primary" onclick="window.open(TG+encodeURIComponent(document.getElementById('wq').textContent)+'&text='+encodeURIComponent('analyse these slides'),'_blank','noopener')">Send it to me</button>
     </div>`);
 }
 function askAnalyse(id){
   const i=DB.ideas.find(x=>x.id===id); if(!i)return;
   openModal(`<h3>Analyse the slides?</h3>
-    <div class="hint">This reads every slide of the reference and records the format, the words and
-      where they sit, then translates it for each persona. It is a vision pass that runs on the
-      box, not in this page, so it is not instant — the idea will show as analysing until the
-      result is published.</div>
+    <div class="hint">This reads every slide of the reference, records the format, the words and
+      where they sit, and translates it for each persona.
+      <br><br>It cannot run inside this page: a static site cannot call a model, and the small
+      service that would has been blocked on one missing GCP permission since yesterday — five
+      routes tried, all shut, it needs Jon. Until then the button sends me the link on Telegram
+      and I run it. One tap, and nothing here pretends to be automatic that is not.</div>
     <div class="pv-cap" style="margin-top:14px">${esc(i.link||'')}</div>
     <div class="mfoot">
       <button class="btn" onclick="closeModal()">Not now</button>
-      <button class="btn primary" onclick="markAnalyse('${i.id}')">Analyse it</button>
+      <button class="btn primary" onclick="markAnalyse('${i.id}')">Analyse it — sends me the link</button>
     </div>`);
 }
 function markAnalyse(id){
@@ -1261,7 +1265,9 @@ function markAnalyse(id){
   // rather than pretend a queue exists that I can read.
   navigator.clipboard&&navigator.clipboard.writeText(i.link||'');
   closeModal();
-  warn('Marked as analysing and the link is on your clipboard — send it to me and it will appear here.');
+  // open the share sheet straight into the thread we already use
+  window.open(TG+encodeURIComponent(i.link||'')+'&text='+encodeURIComponent('analyse these slides'),'_blank','noopener');
+  warn('Marked as analysing. Telegram is open with the link — hit send and it will appear here on refresh.');
 }
 
 function openIdeaDetail(id){
