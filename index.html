@@ -1188,7 +1188,14 @@ async function loadStyles(){
   catch(e){ STYLES={}; }
   renderIdeas();
 }
-const styleFor=i=>(i&&i.link&&STYLES[i.link])||null;
+const normUrl=u=>String(u||'').split('?')[0].split('#')[0].replace(/\/$/,'');
+const styleFor=i=>{
+  if(!i||!i.link)return null;
+  if(STYLES[i.link])return STYLES[i.link];
+  const k=normUrl(i.link);
+  for(const key in STYLES) if(normUrl(key)===k) return STYLES[key];
+  return null;
+};
 async function loadDaily(){
   try{
     const r=await fetch('daily.json',{cache:'no-store'});
@@ -1207,7 +1214,10 @@ function renderDaily(){
     return;
   }
   const w=DAILY.winner;
-  const vel=w.saves_per_day===null?'not measured yet':`${w.saves_per_day}/day`;
+  const gaining=(w.saves_per_day||0)>0;
+  const vel = w.saves_per_day===null ? 'new to the list, not measured yet'
+            : gaining ? `${w.saves_per_day}/day`
+            : 'flat today — nothing on the list is gaining';
   const when=(DAILY.generated||'').replace('T',' ').replace('+00:00',' UTC');
   let age='';
   try{
@@ -1221,8 +1231,8 @@ function renderDaily(){
     <div class="mutedtxt" style="font-size:12.5px">${esc(w.author)} · ${w.slides} slides ·
       <a href="${esc(w.url)}" target="_blank" rel="noopener" style="color:var(--muted)">open original</a></div>
     <div class="met">
-      <span>saves gained <b>${esc(vel)}</b></span>
-      <span>save rate <b>${w.save_rate}%</b></span>
+      <span>${gaining?'saves gained':'movement'} <b>${esc(vel)}</b></span>
+      <span>save rate <b${gaining?'':' style="color:var(--lime)"'}>${w.save_rate}%</b></span>
       <span>views <b>${(w.views||0).toLocaleString()}</b></span>
       <span>saves <b>${(w.saves||0).toLocaleString()}</b></span>
     </div>
@@ -1230,6 +1240,13 @@ function renderDaily(){
       <button class="btn primary" onclick="dailyToAll()">Send to all ${DB.accounts.length} accounts</button>
       <button class="btn" onclick="dailyToBacklog()">Just add to backlog</button>
     </div>
+    ${DAILY.rate_leader?`<div class="why" style="border-top:1px solid rgba(228,242,34,.18);margin-top:14px;padding-top:12px">
+      <b style="color:var(--body)">Highest save rate on the list:</b> ${esc(DAILY.rate_leader.hook)}
+      — <span class="num">${DAILY.rate_leader.save_rate}%</span>
+      (${(DAILY.rate_leader.saves||0).toLocaleString()} of ${(DAILY.rate_leader.views||0).toLocaleString()}),
+      ${esc(DAILY.rate_leader.author||'')}.
+      Save rate is intent, saves per day is traction — they answer different questions, so both are here.
+    </div>`:''}
     <div class="why">Scanned ${esc(when)} · ${age} · across ${DAILY.watchlist_size} watched posts${
       DAILY.failures&&DAILY.failures.length?`, ${DAILY.failures.length} could not be fetched`:''}.
       This ranks a watchlist by how fast each post is gaining saves. It is not a search of TikTok:
