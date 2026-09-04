@@ -1040,6 +1040,17 @@ function renderHooks(){
    open search, profile listing and the RSS bridges are all blocked from our box,
    and the card says so rather than implying a discovery engine. */
 let DAILY=null;
+/* ⭐ THE ASYNC LOOP WITHOUT A BACKEND. Reading 11 slides is a vision pass I run on the box; a
+   static page cannot. So the analysed styles are published as styles.json beside this page and
+   the app looks its ideas up by LINK. Request analysis here, it appears here when it is done.
+   No fake progress bar — the state is derived from whether the file actually has the entry. */
+let STYLES={};
+async function loadStyles(){
+  try{ const r=await fetch('styles.json',{cache:'no-store'}); if(r.ok)STYLES=await r.json(); }
+  catch(e){ STYLES={}; }
+  renderIdeas();
+}
+const styleFor=i=>(i&&i.link&&STYLES[i.link])||null;
 async function loadDaily(){
   try{
     const r=await fetch('daily.json',{cache:'no-store'});
@@ -1158,19 +1169,49 @@ function delRule(id){DB.rules=(DB.rules||[]).filter(r=>r.id!==id);save();}
    else's photographs; copying them into our public repo to make a nicer grid
    would be republishing them. The signed URLs expire in about two weeks, so the
    images will lapse and the read stays — that is the right way round. */
+function pickPersona(ix,id){
+  const i=DB.ideas.find(x=>x.id===id); const d=styleFor(i)||(i&&i.detail);
+  const names=Object.keys((d&&d.plans)||{});
+  PV_PERSONA=names[ix]||null;
+  openIdeaDetail(id);
+}
+function askAnalyse(id){
+  const i=DB.ideas.find(x=>x.id===id); if(!i)return;
+  openModal(`<h3>Analyse the slides?</h3>
+    <div class="hint">This reads every slide of the reference and records the format, the words and
+      where they sit, then translates it for each persona. It is a vision pass that runs on the
+      box, not in this page, so it is not instant — the idea will show as analysing until the
+      result is published.</div>
+    <div class="pv-cap" style="margin-top:14px">${esc(i.link||'')}</div>
+    <div class="mfoot">
+      <button class="btn" onclick="closeModal()">Not now</button>
+      <button class="btn primary" onclick="markAnalyse('${i.id}')">Analyse it</button>
+    </div>`);
+}
+function markAnalyse(id){
+  const i=DB.ideas.find(x=>x.id===id); if(!i)return;
+  i.analysing=true; save();
+  // ⛔ I cannot see your browser's storage, so the request has to travel with you. Copy the link
+  // rather than pretend a queue exists that I can read.
+  navigator.clipboard&&navigator.clipboard.writeText(i.link||'');
+  closeModal();
+  warn('Marked as analysing and the link is on your clipboard — send it to me and it will appear here.');
+}
+
 function openIdeaDetail(id){
   const i=DB.ideas.find(x=>x.id===id); if(!i)return;
-  const d=i.detail;
+  const d=styleFor(i)||i.detail;
   if(!d||!d.slides){
     openModal(`<h3>${esc(i.text)}</h3>
-      <div class="hint">No slide breakdown for this one yet. It needs
-      <span class="num">tools/style_extract.py</span> run against its link, which reads every
-      slide and records the format, the words and where they sit.</div>
-      <div class="mfoot"><button class="btn" onclick="closeModal()">Close</button></div>`);
+      <div class="hint">${i.analysing
+        ? 'Marked for analysis. It will appear here once the slide read is published.'
+        : 'Not analysed yet. Analysing reads every slide and records the format, the words and where they sit, then translates it for each persona.'}</div>
+      <div class="mfoot"><button class="btn" onclick="closeModal()">Close</button>
+      ${!i.analysing&&i.link?`<button class="btn primary" onclick="askAnalyse('${i.id}')">Analyse the slides</button>`:''}</div>`);
     return;
   }
   const personas=Object.keys(d.plans||{});
-  const chosen=personas[0]||null;
+  const chosen=PV_PERSONA&&personas.includes(PV_PERSONA)?PV_PERSONA:(personas[0]||null);
   const plan=chosen?(d.plans[chosen]||[]):[];
   const rows=d.slides.map(sl=>{
     const ours=plan.find(x=>x.n===sl.n);
@@ -1193,6 +1234,8 @@ function openIdeaDetail(id){
     <div class="hint" style="margin:12px 0 16px">Every slide as it actually is, beside our version
       for ${chosen?esc(chosen):'the other accounts'}. The format column is the one that was being
       ignored: copy the mix, not just the promise.</div>
+    <div class="pv-tabs" style="margin-bottom:14px">${personas.map((pn,ix)=>
+      `<button class="pv-tab${pn===chosen?' on':''}" onclick="pickPersona(${ix},'${i.id}')">${esc(pn)}</button>`).join('')}</div>
     <div class="bd-head"><div>reference</div><div>what it is</div><div>ours</div></div>
     ${rows}
     <div class="mfoot"><button class="btn" onclick="closeModal()">Close</button></div>`,'wide');
@@ -1213,8 +1256,10 @@ function renderIdeas(){
          </div>` : '';
     // The extracted STYLE, which is the part that was missing. Format mix first, because
     // "6 singles, 1 group, 1 flatlay, 2 collages" is the fact that changes what we make.
-    const st=i.style;
+    const st=styleFor(i)||i.style;
     const c=ideaCost(i);
+    // Three honest states: analysed, requested-and-waiting, or never asked for.
+    const state=styleFor(i)?'ready':(i.analysing?'waiting':'none');
     const style=st?`<div class="stylebox">
         <div class="k">Style read from the reference</div>
         <div class="v">${Object.entries(st.format_mix||{}).map(([k,v])=>`${v} ${esc(k)}`).join(' · ')}
@@ -1236,6 +1281,8 @@ function renderIdeas(){
       <div class="ac">
         <button class="rowbtn" onclick="event.stopPropagation();promote('${i.id}')">Make a post</button>
         <button class="rowbtn" onclick="event.stopPropagation();promoteAll('${i.id}')">Send to all ${DB.accounts.length}</button>
+        ${state==='none'&&i.link?`<button class="rowbtn" onclick="event.stopPropagation();askAnalyse('${i.id}')">Analyse slides</button>`:''}
+        ${state==='waiting'?`<span class="rowbtn" style="color:var(--lime)">analysing…</span>`:''}
         <button class="rowbtn" onclick="event.stopPropagation();delIdea('${i.id}')">Delete</button>
       </div></div>`;}).join(''):'<div class="empty">No ideas yet.</div>';
 }
@@ -1402,6 +1449,7 @@ const ICON={
   igMark:'<svg viewBox="0 0 24 24"><path d="M6 3.5h12v17l-6-3.9-6 3.9z"/></svg>'
 };
 let PV={id:null,plat:null,i:0};
+let PV_PERSONA=null;
 const atname=h=>/\s/.test(h)?h:(h.startsWith('@')?h:'@'+h);
 const nfmt=n=>n>=1000?(n/1000).toFixed(n>=10000?0:1).replace('.0','')+'K':String(n||0);
 
@@ -1663,7 +1711,7 @@ function todayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMo
 function fmtDate(k){const [y,m,d]=k.split('-').map(Number);
   return new Date(y,m-1,d).toLocaleDateString('en',{weekday:'short',month:'short',day:'numeric'});}
 
-buildNav();renderAll();loadDaily();
+buildNav();renderAll();loadDaily();loadStyles();
 </script>
 </body>
 </html>
