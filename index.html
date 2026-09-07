@@ -988,7 +988,12 @@ const SEED={
 
 /* ------------------------------------------------------------------ store */
 const TG='https://t.me/share/url?url=';
-const KEY='studio.v4';   // v2 carried the templated lines and the old clinic images
+const KEY='studio.v5';   // v2 carried the templated lines and the old clinic images.
+// ⛔⛔ v5, 7 Sep: THE SEED IS ONLY READ WHEN THIS KEY IS ABSENT. I stripped the mock data,
+//    deployed, tested it green — and Reza still saw eight fake accounts, because his browser
+//    restored the OLD data from localStorage under v4. **Any change to SEED must bump this
+//    key or existing users never see it.** Playwright starts with a clean profile every run,
+//    so the suite could not have caught this — see the returning-user test in test_studio.cjs.
 let DB=load();
 function load(){
   try{const r=localStorage.getItem(KEY);if(r)return migrate(JSON.parse(r));}catch(e){}
