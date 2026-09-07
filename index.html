@@ -551,7 +551,8 @@ label.fl{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
    - two reference hooks measured off @sherbabyyyyy via the tikwm API
    ====================================================================== */
 const PLATFORMS={tiktok:{name:'TikTok',color:'#7c72ff'},instagram:{name:'Instagram',color:'#eb5757'},pinterest:{name:'Pinterest',color:'#27a644'}};
-const RATE={lite:0.0336,pro:0.1344};   // per image, measured
+const RATE={lite:0.0336,pro:0.1344,stock:0};   // per image, measured. 'stock' is a
+// licensed photograph from assets/stock — no model call, so it genuinely costs nothing.
 // ⭐ WHAT AN IDEA COSTS. Reading a reference and translating it are TEXT calls; the images are the
 // only part I can price, because the gemini-2.5-flash text SKU is not in the billing catalogue
 // this service account can see. So the tokens are measured and shown, and NOT converted into a
@@ -578,7 +579,7 @@ const SEED={
   // ⛔ Handles are left as TBD on purpose. Inventing one risks landing on a real account or a
   // real mark, which is exactly the mistake "Kestrel" was the day before.
   accounts:[
-    {id:'cl-tt',platform:'tiktok',handle:'nadiadoessocial',person:'Nadia',avatar:'media/avatars/clinic.jpg',bio:'social for skin clinics · nine things a week you are allowed to post · no before and afters',followers:0,label:'Clinics',persona:
+    {id:'cl-tt',platform:'tiktok',handle:'nadiadoessocial',person:'Nadia',avatar:'media/avatars/clinic.jpg',bio:'social media manager for clinics and med spas · i post the ideas i would charge for',followers:0,label:'Clinics',persona:
 `Who: a freelance social media manager who only works with skin clinics, aesthetics and wellness.
 Voice: lowercase, dry, talking to other people in the trade. Captions her own camera roll.
 Subject: content ideas for one clinic type per post, named on the cover.
@@ -586,7 +587,7 @@ Format: 9 to 11 slides, native 9:16, no crop. One short lowercase line per slide
 good length. Half name a literal thing to shoot, half are a reaction to the picture.
 Never: a before-and-after, a result, a claim about what a treatment does. In this vertical that
 is not a style choice, it is the regulated line. Every idea must be legal to post.`},
-    {id:'cl-ig',platform:'instagram',handle:'nadiadoessocial',person:'Nadia',avatar:'media/avatars/clinic.jpg',bio:'social for skin clinics · nine things a week you are allowed to post · no before and afters',followers:0,label:'Clinics',persona:
+    {id:'cl-ig',platform:'instagram',handle:'nadiadoessocial',person:'Nadia',avatar:'media/avatars/clinic.jpg',bio:'social media manager for clinics and med spas · i post the ideas i would charge for',followers:0,label:'Clinics',persona:
 `Same person as the clinics TikTok, a shade more polished. Still lowercase.
 Format: 8 slides maximum, and the cover line must sit in the MIDDLE THIRD, because Instagram
 crops 9:16 down to 4:5 and beheads anything near the top. Measured on our own slides, not guessed.
@@ -602,14 +603,14 @@ shown as a flex — no ladders on boxes, no working live.`},
 `Same person as the trades TikTok. Slightly tidier, still not corporate.
 Format: 8 slides, cover line in the middle third for the 4:5 crop.
 Never: a price promise, an unsafe shot, or a dig at another trade.`},
-    {id:'fd-tt',platform:'tiktok',handle:'romybeforeopen',person:'Romy',avatar:'media/avatars/cafe.jpg',bio:'social for cafes · the hour before you open is the whole content plan',followers:0,label:'Cafe and food',persona:
+    {id:'fd-tt',platform:'tiktok',handle:'romybeforeopen',person:'Romy',avatar:'media/avatars/cafe.jpg',bio:'social media manager for cafes and bakeries · @TrySuara Ambassador',followers:0,label:'Cafe and food',persona:
 `Who: a social media manager for cafes, bakeries and small food places.
 Voice: lowercase, warm, unhurried. Notices light and steam and hands.
 Subject: the hour before opening and the hour after closing, which is when the good shots are.
 Format: 9 slides, 9:16. One short line each. Product, process, people, room.
 Never: a health claim, a nutrition claim, or anything about allergens. Never invent a dish, a
 price or an opening time — those change and a wrong one costs the client a customer.`},
-    {id:'fd-ig',platform:'instagram',handle:'romybeforeopen',person:'Romy',avatar:'media/avatars/cafe.jpg',bio:'social for cafes · the hour before you open is the whole content plan',followers:0,label:'Cafe and food',persona:
+    {id:'fd-ig',platform:'instagram',handle:'romybeforeopen',person:'Romy',avatar:'media/avatars/cafe.jpg',bio:'social media manager for cafes and bakeries · @TrySuara Ambassador',followers:0,label:'Cafe and food',persona:
 `Same person as the food TikTok. Format: 8 slides, cover line in the middle third for the 4:5
 crop. Never a health or allergen claim, never an invented price or opening time.`},
     {id:'su-tt',platform:'tiktok',handle:'suara.studio',person:'Suara',avatar:'',bio:'five industries, one system · the work, not the pitch',followers:0,label:'Suara',persona:
@@ -635,6 +636,47 @@ width it ends up a third of the frame and reads as a screenshot.`}
   // names something that exists in exactly one trade, and each image was regenerated to match
   // its new line rather than left to drift.
   posts:[
+    {id:'p-w01',date:'2026-09-08',account:'fd-tt',hook:"why your cafe photos look brown",niche:'cafe',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/romy-brown-real/romy-brown-real-01.jpg", "media/romy-brown-real/romy-brown-real-02.jpg", "media/romy-brown-real/romy-brown-real-03.jpg", "media/romy-brown-real/romy-brown-real-04.jpg", "media/romy-brown-real/romy-brown-real-05.jpg", "media/romy-brown-real/romy-brown-real-06.jpg"],
+     caption:"your ceiling lights are the problem. not your phone, not the coffee. warm bulbs make everything look muddy and no filter really fixes it. carry the cup to the window and it is a different photo. #cafeowner #coffeeshop #cafemarketing"},
+    {id:'p-w02',date:'2026-09-08',account:'cl-tt',hook:"what to post when you can't show a face",niche:'aesthetic clinic',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/nadia-no-face/nadia-no-face-01.jpg", "media/nadia-no-face/nadia-no-face-02.jpg", "media/nadia-no-face/nadia-no-face-03.jpg", "media/nadia-no-face/nadia-no-face-04.jpg", "media/nadia-no-face/nadia-no-face-05.jpg", "media/nadia-no-face/nadia-no-face-06.jpg"],
+     caption:"the hardest part of clinic content is that the thing you are proudest of is on someone face. here is what you can post instead. #skinclinic #medspa #clinicmarketing"},
+    {id:'p-w03',date:'2026-09-09',account:'fd-tt',hook:"the three shots every new pastry needs",niche:'cafe',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/romy-three-shots/romy-three-shots-01.jpg", "media/romy-three-shots/romy-three-shots-02.jpg", "media/romy-three-shots/romy-three-shots-03.jpg", "media/romy-three-shots/romy-three-shots-04.jpg", "media/romy-three-shots/romy-three-shots-05.jpg", "media/romy-three-shots/romy-three-shots-06.jpg"],
+     caption:"whole, cut, in a hand. that is the set. four minutes on launch morning. #bakery #pastrychef #cafeowner"},
+    {id:'p-w04',date:'2026-09-09',account:'cl-tt',hook:"why your room photos feel cold",niche:'aesthetic clinic',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/nadia-cold-room/nadia-cold-room-01.jpg", "media/nadia-cold-room/nadia-cold-room-02.jpg", "media/nadia-cold-room/nadia-cold-room-03.jpg", "media/nadia-cold-room/nadia-cold-room-04.jpg", "media/nadia-cold-room/nadia-cold-room-05.jpg", "media/nadia-cold-room/nadia-cold-room-06.jpg"],
+     caption:"your room is lovely in person and awful in photos. it is the overhead strip light. #medspa #skinclinic #salonowner"},
+    {id:'p-w05',date:'2026-09-10',account:'fd-tt',hook:"the best light in your cafe is at 10am",niche:'cafe',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/romy-ten-am/romy-ten-am-01.jpg", "media/romy-ten-am/romy-ten-am-02.jpg", "media/romy-ten-am/romy-ten-am-03.jpg", "media/romy-ten-am/romy-ten-am-04.jpg", "media/romy-ten-am/romy-ten-am-05.jpg", "media/romy-ten-am/romy-ten-am-06.jpg"],
+     caption:"the good light happens exactly when you are slammed. pick one seat, block ten minutes. #cafeowner #naturallight"},
+    {id:'p-w06',date:'2026-09-10',account:'cl-tt',hook:"stop posting the machine, post the hands",niche:'aesthetic clinic',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/nadia-post-the-hands/nadia-post-the-hands-01.jpg", "media/nadia-post-the-hands/nadia-post-the-hands-02.jpg", "media/nadia-post-the-hands/nadia-post-the-hands-03.jpg", "media/nadia-post-the-hands/nadia-post-the-hands-04.jpg", "media/nadia-post-the-hands/nadia-post-the-hands-05.jpg", "media/nadia-post-the-hands/nadia-post-the-hands-06.jpg"],
+     caption:"nobody books a laser. they book the person holding it. #aestheticclinic #medspa #skinclinic"},
+    {id:'p-w07',date:'2026-09-11',account:'fd-tt',hook:"post the staff, not just the food",niche:'cafe',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/romy-post-the-staff/romy-post-the-staff-01.jpg", "media/romy-post-the-staff/romy-post-the-staff-02.jpg", "media/romy-post-the-staff/romy-post-the-staff-03.jpg", "media/romy-post-the-staff/romy-post-the-staff-04.jpg", "media/romy-post-the-staff/romy-post-the-staff-05.jpg", "media/romy-post-the-staff/romy-post-the-staff-06.jpg"],
+     caption:"nobody follows a flat white. ask them first, then put your people in the feed. #cafeowner #hospitality"},
+    {id:'p-w08',date:'2026-09-11',account:'cl-tt',hook:"three photos worth taking before a treatment",niche:'aesthetic clinic',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/nadia-three-photos/nadia-three-photos-01.jpg", "media/nadia-three-photos/nadia-three-photos-02.jpg", "media/nadia-three-photos/nadia-three-photos-03.jpg", "media/nadia-three-photos/nadia-three-photos-04.jpg", "media/nadia-three-photos/nadia-three-photos-05.jpg", "media/nadia-three-photos/nadia-three-photos-06.jpg"],
+     caption:"sixty seconds before your first client. none of it needs a client in frame. #skinclinic #medspa #beautybusiness"},
+    {id:'p-w09',date:'2026-09-12',account:'fd-tt',hook:"the caption formula that isn't delicious",niche:'cafe',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/romy-caption-formula/romy-caption-formula-01.jpg", "media/romy-caption-formula/romy-caption-formula-02.jpg", "media/romy-caption-formula/romy-caption-formula-03.jpg", "media/romy-caption-formula/romy-caption-formula-04.jpg", "media/romy-caption-formula/romy-caption-formula-05.jpg", "media/romy-caption-formula/romy-caption-formula-06.jpg"],
+     caption:"nobody has ever tasted a caption. name one specific thing instead. #cafemarketing #copywriting"},
+    {id:'p-w10',date:'2026-09-12',account:'cl-tt',hook:"what to write when you can't show the result",niche:'aesthetic clinic',
+     status:'ready',slides:6,generated:6,model:'stock',cost:0,views:0,saves:0,likes:0,comments:0,
+     media:["media/nadia-what-to-write/nadia-what-to-write-01.jpg", "media/nadia-what-to-write/nadia-what-to-write-02.jpg", "media/nadia-what-to-write/nadia-what-to-write-03.jpg", "media/nadia-what-to-write/nadia-what-to-write-04.jpg", "media/nadia-what-to-write/nadia-what-to-write-05.jpg", "media/nadia-what-to-write/nadia-what-to-write-06.jpg"],
+     caption:"describe the treatment, not the outcome. #skinclinic #medspa #clinicmarketing"},
+
     {id:'p-cl',date:'2026-09-04',account:'cl-tt',hook:'extremely chic content ideas',niche:'aesthetic clinic',
      status:'scheduled',slides:9,generated:9,model:'lite',views:0,saves:0,likes:0,comments:0,
      media:MEDIA_CLINIC,script:['extremely chic content ideas / • aesthetic clinic •','the tray laid out before the first client','the consult form, pen resting on it','one ampoule held up to the window','the mask lit, nobody wearing it','the towel warmer opening','the shelf restocked in one straight line','your team in the mirror before doors open','the last lamp off at seven'],
